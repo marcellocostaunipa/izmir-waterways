@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Izmir Water Resources</title>
+  
+  <!-- fullPage.js CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/4.0.20/fullpage.min.css">
+  
+  <!-- p5.js library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+  
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+    
+    .section {
+      text-align: center;
+      position: relative;
+    }
+    
+    .intro {
+      background-color: #f0f8ff;
+      color: #333;
+    }
+    
+    .visualization {
+      background-color: #f0f0f0;
+    }
+    
+    .details {
+      background-color: #e6f2ff;
+    }
+    
+    h1 {
+      font-size: 3em;
+      margin-bottom: 20px;
+    }
+    
+    p {
+      font-size: 1.2em;
+      max-width: 800px;
+      margin: 0 auto 20px;
+      line-height: 1.6;
+    }
+    
+    .content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      max-width: 1200px;
+    }
+    
+    .sketch-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .fp-watermark {
+      display: none !important;
+    }
+  </style>
+  
+</head>
+<body>
+  <div id="fullpage">
+    <!-- Introduction Section -->
+    <div class="section intro">
+      <div class="content">
+        <h1>Izmir Water Resources</h1>
+        <p>An interactive visualization of water resources in the Izmir province of Turkey.</p>
+        <p>Scroll down to explore the visualization.</p>
+      </div>
+    </div>
+    
+    <!-- Main Visualization Section -->
+    <div class="section visualization">
+      <div class="sketch-container" id="sketch-holder"></div>
+    </div>
+    
+    <!-- Details Section -->
+    <div class="section details">
+      <div class="content">
+        <h1>About This Project</h1>
+        <p>This visualization shows the water resources in Izmir, including dams and their current water levels. The data is based on geographic information and historical records.</p>
+        <p>Click on any dam to see detailed information about its capacity, current water level, and historical data.</p>
+        <p>Created as part of the 2025 Waterways Workshop.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- fullPage.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/4.0.20/fullpage.min.js"></script>
+  
+  <!-- Utility functions -->
+  <script src="utils/utils.js"></script>
+  
+  <!-- Main sketch -->
+  <script src="sketch.js"></script>
+  
+  <!-- fullPage initialization -->
+  <script>
+    // Initialize fullPage.js
+    new fullpage('#fullpage', {
+      // Options
+      autoScrolling: true,
+      scrollHorizontally: true,
+      navigation: true,
+      navigationPosition: 'right',
+      showActiveTooltip: true,
+      slidesNavigation: true,
+      controlArrows: true,
+      
+      // Customize the tooltip text for each section
+      anchors: ['intro', 'visualization', 'about'],
+      navigationTooltips: ['Introduction', 'Visualization', 'About'],
+      
+      // Callback when leaving a section
+      onLeave: function(origin, destination, direction) {
+        // If leaving the visualization section, pause any animations if needed
+        if (origin.index === 1 && typeof window.pauseSketch === 'function') {
+          window.pauseSketch();
+        }
+        
+        // If entering the visualization section, resume animations if needed
+        if (destination.index === 1 && typeof window.resumeSketch === 'function') {
+          window.resumeSketch();
+        }
+      },
+      
+      // Callback after the structure is generated
+      afterRender: function() {
+        // This is called once the page structure is generated
+        console.log('fullPage.js has been initialized');
+      }
+    });
+  </script>
+</body>
+</html>
