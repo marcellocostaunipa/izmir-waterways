@@ -14,9 +14,9 @@ An interactive visualization of water resources in the Izmir province of Turkey,
 1. Clone this repository
 2. Make sure you have the following files:
    - `index.html` - Main HTML file with fullPage.js integration
-   - `day5-dam-shapes-modular.js` - Main p5.js sketch
-   - `utils/geo-utils.js` - Utility functions for geographic calculations
-   - `dams.json` - Data about dams in Izmir
+   - `sketch.js` - Main p5.js sketch
+   - `utils/utils.js` - Utility functions for geographic calculations
+   - `izsu.json` - Data about dams in Izmir
    - `izmir.json` - Geographic boundary data for Izmir province
    - `dams/balcovaData.json` - Shape data for Balçova Dam
 
