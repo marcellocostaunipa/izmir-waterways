@@ -53,7 +53,7 @@
         },
         "properties": {
           "name": "Alaçatı Dam",
-          "area": null,
+          "area": 2.55,
           "currentWaterLevel": null,
           "timeline": []
         }

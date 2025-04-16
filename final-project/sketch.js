@@ -1,8 +1,8 @@
 /* 
-Day 5.1: Add dam shapes in details panel (fixed aspect ratio)
+Final Project
 */
 
-const bounds = {
+let bounds = {
   minLon: 26.35,
   maxLon: 28.56,
   minLat: 37.89,
@@ -13,27 +13,38 @@ let izsuData;
 let izmir;
 let damShapes = {}; // Object to store dam shape data by name
 
+// Initially, no dam is being hovered
+let hoveredDam = null;
 // Track which dam is selected
 let selectedDam = null;
 
+let panelWidth;
+let panelHeight;
+let panelX;
+let panelY;
+
 function preload() {
-  
-  izsuData = loadJSON('data/izsu.json');
-  izmir = loadJSON('data/izmir.json');
-  
+  izsuData = loadJSON("data/izsu-02.json");
+  izmir = loadJSON("data/izmir.json");
+
   // Load dam shape data
-  loadJSON('data/dams/balcovaData.json', function(data) {
+  loadJSON("data/dams/balcovaData.json", function (data) {
     damShapes["Balçova Dam"] = data.balcovaData;
   });
-  
+
   // You can add more dam shapes here as they become available
   // Example: loadJSON('dams/tahtaliData.json', function(data) { damShapes["Tahtalı Dam"] = data.tahtaliData; });
 }
 
 function setup() {
-  createCanvas(500, 500);
+  createCanvas(1200, 500);
   textFont("Arial");
 
+  panelWidth = 280;
+  panelHeight = 300;
+  panelX = width - panelWidth - 20;
+  panelY = 20;
+  
   // Create canvas inside the sketch-holder div
   const sketchHolder = document.getElementById("sketch-holder")
   if (sketchHolder) {
@@ -54,7 +65,7 @@ function draw() {
 
   // Draw the Izmir province boundary
   drawIzmirBoundary();
-  
+
   // Draw the dams
   drawDams();
 
@@ -69,17 +80,16 @@ function draw() {
 
 function drawIzmirBoundary() {
   fill(255);
-  stroke(100);
-  strokeWeight(1);
+  noStroke();
 
   // Simplified boundary for demonstration
   beginShape();
- 
+
   // Iterate through izmir.json
   boundaryPoints = izmir.boundaryPoints;
 
-  for (const point of boundaryPoints) {
-    const pixelCoord = geoToPixel(point[0], point[1]);
+  for (let point of boundaryPoints) {
+    let pixelCoord = geoToPixel(point[0], point[1]);
     vertex(pixelCoord.x, pixelCoord.y);
   }
 
@@ -88,18 +98,18 @@ function drawIzmirBoundary() {
 
 function drawDams() {
   // Draw each dam as a circle
-  for (const feature of izsuData.features) {
+  for (let feature of izsuData.features) {
     if (feature.geometry.type === "Point") {
-      const coords = feature.geometry.coordinates;
-      const pixelCoord = geoToPixel(coords[0], coords[1]);
+      let coords = feature.geometry.coordinates;
+      let pixelCoord = geoToPixel(coords[0], coords[1]);
 
       // Calculate circle size based on dam area
-      const area = feature.properties.area || 5;
-      const diameter = map(area, 0, 25, 10, 40);
+      let area = feature.properties.area || 5;
+      let diameter = map(area, 0, 25, 10, 60);
 
       // Draw water level as fill percentage
-      const waterLevel = feature.properties.currentWaterLevel || 50;
-      const fillHeight = (waterLevel / 100) * diameter;
+      let waterLevel = feature.properties.currentWaterLevel || 50;
+      let fillHeight = (waterLevel / 100) * diameter;
 
       // Draw dam circle
       stroke(0, 100, 200);
@@ -119,7 +129,7 @@ function drawDams() {
       ) {
         fill(0);
         textSize(12);
-        textAlign(CENTER);
+//         textAlign(CENTER);
         text(
           feature.properties.name,
           pixelCoord.x,
@@ -129,6 +139,7 @@ function drawDams() {
 
       // Check if mouse is over this dam
       if (dist(mouseX, mouseY, pixelCoord.x, pixelCoord.y) < diameter / 2) {
+        
         // Highlight on hover
         noFill();
         stroke(255, 100, 0);
@@ -143,7 +154,7 @@ function drawDams() {
 
         fill(0);
         noStroke();
-        textAlign(LEFT);
+//         textAlign(LEFT);
         textSize(12);
         text(feature.properties.name, mouseX + 15, mouseY + 15);
         text(`Area: ${area} km²`, mouseX + 15, mouseY + 30);
@@ -160,187 +171,194 @@ function drawDams() {
 
 function drawDamDetails(dam) {
   // Draw detailed information panel for the selected dam
-  const panelWidth = 280;
-  const panelHeight = 300; // Increased height to accommodate dam shape
-  const panelX = width - panelWidth - 20;
-  const panelY = 50;
-
+  let panelWidth = 280;
+  let panelHeight = 320; // Increased height to accommodate more information
+  let panelX = width - panelWidth - 20;
+  let panelY = 50;
+  
+  push();
+  translate(panelX, panelY);
+  
   // Panel background
   fill(255);
   stroke(0);
   strokeWeight(1);
-  rect(panelX, panelY, panelWidth, panelHeight);
+  rect(0, 0, panelWidth, panelHeight);
 
   // Dam information
   fill(0);
   noStroke();
-  textAlign(LEFT);
   textSize(16);
-  text(dam.properties.name, panelX + 10, panelY + 25);
+  textAlign(LEFT);
+  text(dam.properties.name, 10, 25);
 
   textSize(12);
-  text(`Area: ${dam.properties.area} km²`, panelX + 10, panelY + 50);
-  text(
-    `Current Water Level: ${dam.properties.currentWaterLevel}%`,
-    panelX + 10,
-    panelY + 70
-  );
+  
+  // Display area if available
+  if (dam.properties.area) {
+    text("Surface Area: " + dam.properties.area + " km²", 10, 50);
+  }
+  
+  // Get the current year data (2025)
+  let currentYearData;
+  if (dam.properties.timeline && dam.properties.timeline.length > 0) {
+    const timelineEntry = dam.properties.timeline[0];
+    currentYearData = timelineEntry.y2025;
+  }
+  
+  // Display maximum capacity
+  let maxVolume;
+  if(dam.properties.maximum) {
+    maxVolume = dam.properties.maximum.lakeVolume;
+  } else {
+    maxVolume = 0;
+  }
+  text("Maximum Capacity: " + formatVolume(maxVolume), 10, 70);
+  
+  // Display current water data if available
+  let yPos = 90;
+  if (currentYearData) {
+    text("Current Water Level: " + currentYearData.lakeWaterElevation.toFixed(2) + " m", 10, yPos);
+    yPos += 20;
 
-  // Draw water level bar
-  const barWidth = panelWidth - 20;
-  const barHeight = 20;
-  const barX = panelX + 10;
-  const barY = panelY + 85;
-
-  // Bar outline
-  noFill();
-  stroke(0);
-  strokeWeight(1);
-  rect(barX, barY, barWidth, barHeight);
-
-  // Fill based on water level
-  const fillWidth = (dam.properties.currentWaterLevel / 100) * barWidth;
-  fill(0, 100, 255, 150);
-  noStroke();
-  rect(barX, barY, fillWidth, barHeight);
-
-  // Draw dam shape if available
-  const damName = dam.properties.name;
-  if (damShapes[damName]) {
-    // Draw a title for the shape
-    fill(0);
-    noStroke();
+    text("Current Volume: " + formatVolume(currentYearData.totalWaterVolume), 10, yPos);
+    yPos += 20;
     
-    // Set up a clipping region for the dam shape
-    const shapeWidth = 260;
-    const shapeHeight = 80;
-    const shapeX = panelX + 10;
-    const shapeY = panelY + 130;
+    text("Usable Volume: " + formatVolume(currentYearData.usableWaterVolume), 10, yPos);
+    yPos += 20;
     
-    // Draw shape background
-    fill(240);
-    noStroke();
-    rect(shapeX, shapeY, shapeWidth, shapeHeight);
+    text("Fullness Rate: " + currentYearData.activeFullnessRate.toFixed(2)+ "%", 10, yPos);
+    yPos += 30;
     
-    // Draw the dam shape
-    push(); // Save current drawing state
+    // Draw water level bar
+    let barWidth = panelWidth - 20;
+    let barHeight = 20;
+    let barX = 10;
+    let barY = yPos;
     
-    // Create a mini-viewport for the dam shape
-    translate(shapeX, shapeY);
-    
-    // Draw the dam shape with a light blue fill
-    fill(200, 230, 255);
-    stroke(0, 100, 200);
+    // Bar outline
+    noFill();
+    stroke(0);
     strokeWeight(1);
+    rect(barX, barY, barWidth, barHeight);
     
-    // Calculate custom bounds for this specific shape
-    const shapeBounds = calculateBounds(damShapes[damName]);
+    // Fill based on water level
+    let fillWidth = (currentYearData.activeFullnessRate / 100) * barWidth;
     
-    // Preserve aspect ratio when drawing the shape
-    const shapeAspectRatio = (shapeBounds.maxLon - shapeBounds.minLon) / 
-                            (shapeBounds.maxLat - shapeBounds.minLat);
-    const boxAspectRatio = shapeWidth / shapeHeight;
-    
-    let adjustedWidth = shapeWidth;
-    let adjustedHeight = shapeHeight;
-    let offsetX = 0;
-    let offsetY = 0;
-    
-    if (shapeAspectRatio > boxAspectRatio) {
-      // Shape is wider than the box, adjust height and center vertically
-      adjustedHeight = shapeWidth / shapeAspectRatio;
-      offsetY = (shapeHeight - adjustedHeight) / 2;
+    // Color coding based on fullness rate
+    let fillColor;
+    if (currentYearData.activeFullnessRate < 30) {
+      fillColor = color(255, 0, 0, 150); // Red for low levels
+    } else if (currentYearData.activeFullnessRate < 60) {
+      fillColor = color(255, 165, 0, 150); // Orange for medium levels
     } else {
-      // Shape is taller than the box, adjust width and center horizontally
-      adjustedWidth = shapeHeight * shapeAspectRatio;
-      offsetX = (shapeWidth - adjustedWidth) / 2;
+      fillColor = color(0, 100, 255, 150); // Blue for high levels
     }
     
-    // Draw the shape with preserved aspect ratio
-    drawMultiPolygonWithSize(
-      damShapes[damName], 
-      shapeBounds, 
-      adjustedWidth, 
-      adjustedHeight, 
-      offsetX, 
-      offsetY, 
-      5
-    );
+    fill(fillColor);
+    noStroke();
+    rect(barX, barY, fillWidth, barHeight);
     
-    pop(); // Restore drawing state
-  }
-
-  // Draw timeline if available (positioned below the shape)
-  const timelineY = damShapes[damName] ? panelY + 220 : panelY + 130;
-  
-  if (dam.properties.timeline && dam.properties.timeline.length > 0) {
-    textSize(12);
+    // Add percentage text on the bar
     fill(0);
-    text("Historical Water Levels:", panelX + 10, timelineY);
-
+    textAlign(CENTER);
+    text(currentYearData.activeFullnessRate.toFixed(1) +"%", barX + barWidth/2, barY + barHeight/2 + 4);
+    
+    yPos += barHeight + 20;
+  }
+  
+  // Draw timeline if available
+  if (dam.properties.timeline && dam.properties.timeline.length > 0) {
+    textAlign(LEFT);
+    fill(0);
+    text("Historical Fullness Rates:", 10, yPos);
+    yPos += 20;
+    
     // Simple line chart
-    const chartWidth = 230;
-    const chartHeight = 50;
-    const chartX = panelX + 25;
-    const chartY = timelineY + 10;
-
+    let chartWidth = panelWidth - 40;
+    let chartHeight = 60;
+    let chartX = 20;
+    let chartY = yPos;
+    
+    // Chart background
+    fill(245);
+    noStroke();
+    rect(chartX, chartY, chartWidth, chartHeight);
+    
     // Chart axes
     stroke(0);
     strokeWeight(1);
-    line(
-      chartX,
-      chartY + chartHeight,
-      chartX + chartWidth,
-      chartY + chartHeight
-    ); // x-axis
+    line(chartX, chartY + chartHeight, chartX + chartWidth, chartY + chartHeight); // x-axis
     line(chartX, chartY, chartX, chartY + chartHeight); // y-axis
-
-    // Plot points
-    const timeline = dam.properties.timeline;
-    if (timeline.length > 1) {
-      stroke(0, 100, 200);
-      strokeWeight(2);
-      noFill();
-
-      beginShape();
-
-      for (let i = 0; i < timeline.length; i++) {
-        const entry = timeline[i];
-        const x = chartX + (i / (timeline.length - 1)) * chartWidth;
-        const y = chartY + chartHeight - (entry.level / 100) * chartHeight;
+    
+    // Get timeline data
+    let timelineEntry = dam.properties.timeline[0];
+    let years = ["y2021", "y2022", "y2023", "y2024", "y2025"];
+    let fullnessRates = years.map(year => timelineEntry[year].activeFullnessRate);
+    
+    // Draw year labels
+    fill(0);
+    noStroke();
+    textAlign(CENTER);
+    textSize(9);
+    
+    // Using a simple for loop
+    for (let i = 0; i < years.length; i++) {
+      let x = map(i, 0, years.length - 1, chartX, chartX + chartWidth);
+      text(years[i].substring(1), x, chartY + chartHeight + 12); // Remove the 'y' prefix
+    }
+    
+    // Draw grid lines and percentage labels
+    stroke(200);
+    strokeWeight(0.5);
+    textAlign(RIGHT);
+    textSize(8);
+    
+    for (let percent = 0; percent <= 100; percent += 25) {
+      let y = map(percent, 0, 100, chartY + chartHeight, chartY);
+      line(chartX, y, chartX + chartWidth, y);
+      fill(0);
+      text(percent + "%", chartX - 5, y + 3);
+    }
+    
+    // Plot lines connecting fullness rates
+    stroke(0, 100, 200);
+    strokeWeight(2);
+    noFill();
+    beginShape();
+    
+    // Using a simple for loop with map() function
+    for (let i = 0; i < fullnessRates.length; i++) {
+        const rate = fullnessRates[i];
+        const x = map(i, 0, fullnessRates.length - 1, chartX, chartX + chartWidth);
+        const y = map(rate, 0, 100, chartY + chartHeight, chartY);
         vertex(x, y);
-
-        // Year labels
-        if (i === 0 || i === timeline.length - 1) {
-          fill(0);
-          noStroke();
-          textAlign(CENTER);
-          textSize(10);
-          text(entry.year, x, chartY + chartHeight + 12);
-        }
-      }
-
-      endShape();
+    }
+    
+    endShape();
+    
+    // Plot points
+    fill(0, 100, 200);
+    noStroke();
+    
+    // Using a simple for loop with map() function for drawing ellipses
+    for (let i = 0; i < fullnessRates.length; i++) {
+        const rate = fullnessRates[i];
+        const x = map(i, 0, fullnessRates.length - 1, chartX, chartX + chartWidth);
+        const y = map(rate, 0, 100, chartY + chartHeight, chartY);
+        ellipse(x, y, 6, 6);
     }
   }
-
+  
   // Close button
   stroke(0);
   strokeWeight(2);
-  line(
-    panelX + panelWidth - 18,
-    panelY + 8,
-    panelX + panelWidth - 8,
-    panelY + 18
-  );
-  line(
-    panelX + panelWidth - 8,
-    panelY + 8,
-    panelX + panelWidth - 18,
-    panelY + 18
-  );
-
-  // Check if close button is clicked
+  line(panelWidth - 18, 8, panelWidth - 8, 18);
+  line(panelWidth - 8, 8, panelWidth - 18, 18);
+  
+  pop();
+  
+  // Check if close button is clicked - using global coordinates
   if (
     mouseIsPressed &&
     mouseX > panelX + panelWidth - 18 &&
@@ -352,42 +370,48 @@ function drawDamDetails(dam) {
   }
 }
 
-function drawUI() {
-  // Draw title and legend
-  noStroke();
-  fill(0);
-  textSize(20);
-  textAlign(LEFT);
-  text("Izmir Water Resources (DAY 5.1)", 20, 30);
+// Helper function to format volume in a readable way
+function formatVolume(volume) {
+  if (volume >= 1000000000) {
+    return (volume / 1000000000).toFixed(2) + " billion m³";
+  } else if (volume >= 1000000) {
+    return (volume / 1000000).toFixed(2) + " million m³";
+  } else if (volume >= 1000) {
+    return (volume / 1000).toFixed(2) + " thousand m³";
+  } else {
+    return volume.toFixed(0) + " m³";
+  }
+}
 
+function drawUI() {
+  push();
   // Legend
   textSize(12);
+  textAlign(LEFT);
 
   // Dam symbol
   stroke(0, 100, 200);
   strokeWeight(2);
   fill(255);
   ellipse(30, height - 60, 15);
+  noStroke();
   fill(0, 100, 255, 150);
-  ellipse(30, height - 60, 7.5);
+  ellipse(30, height - 40, 8.5);
 
   fill(0);
   noStroke();
-  text("Dam", 45, height - 56);
+  text("Capacity", 45, height - 56);
+  text("Water level", 45, height - 36);
 
   // Attribution
   textSize(8);
-  text("2025 - Waterways Workshop", 20, height - 10);
+  text("2025 - Waterways Workshop", width - 115, height - 10);
+  pop();
 }
 
+// If click is outside the panel, deselect the dam
 function mousePressed() {
-  // Check if we clicked outside the detail panel to deselect
   if (selectedDam) {
-    const panelWidth = 280;
-    const panelHeight = 300; // Match the increased panel height
-    const panelX = width - panelWidth - 20;
-    const panelY = 50;
-
     if (
       !(
         mouseX > panelX &&
@@ -396,25 +420,8 @@ function mousePressed() {
         mouseY < panelY + panelHeight
       )
     ) {
-      // Only deselect if we're not clicking on a new dam (handled in drawDams)
-      let clickedOnDam = false;
-      for (const feature of izsuData.features) {
-        if (feature.geometry.type === "Point") {
-          const coords = feature.geometry.coordinates;
-          const pixelCoord = geoToPixel(coords[0], coords[1]);
-          const area = feature.properties.area || 5;
-          const diameter = map(area, 0, 25, 10, 40);
-
-          if (dist(mouseX, mouseY, pixelCoord.x, pixelCoord.y) < diameter / 2) {
-            clickedOnDam = true;
-            break;
-          }
-        }
-      }
-
-      if (!clickedOnDam) {
-        selectedDam = null;
-      }
+      selectedDam = null;
     }
   }
 }
+

@@ -25,7 +25,7 @@ Day 01: Basic Map and Geographic Concepts
 */
 
 // Geographic bounds of our map
-const bounds = {
+let bounds = {
   minLon: 26.35,
   maxLon: 28.56,
   minLat: 37.89,
@@ -41,6 +41,11 @@ function preload() {
 function setup() {
   createCanvas(500, 500);
   textFont("Arial");
+  
+  let features = izsuData.features;
+  for(let feature of features) {
+    console.log(feature.properties);
+  }
 }
 
 function draw() {
@@ -66,8 +71,8 @@ function drawDams() {
   // Draw each dam as a circle
   for (let feature of izsuData.features) {
     if (feature.geometry.type === "Point") {
-      const coords = feature.geometry.coordinates;
-      const pixelCoord = geoToPixel(coords[0], coords[1]);
+      let coords = feature.geometry.coordinates;
+      let pixelCoord = geoToPixel(coords[0], coords[1]);
 
       // Draw dam circle
       fill(0, 100, 255);

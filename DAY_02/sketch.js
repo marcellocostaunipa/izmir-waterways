@@ -25,21 +25,31 @@ Day 2: Detailed Map and Visual Representation
 
 */
 
-const bounds = {
+let bounds = {
   minLon: 26.35,
   maxLon: 28.56,
   minLat: 37.89,
   maxLat: 39.46,
 };
 
+let izsuData;
+let izmir;
+
+let maxArea = 25;
+
 function preload() {
   izsuData = loadJSON('data/izsu.json');
-  izmir = loadJSON('izmir.json');
+  izmir = loadJSON('data/izmir.json');
 }
 
 function setup() {
   createCanvas(500, 500);
   textFont("Arial");
+  
+  let features = izsuData.features;
+  for(let feature of features) {
+    console.log(feature.properties.currentWaterLevel);
+  }
 }
 
 function draw() {
@@ -64,10 +74,10 @@ function drawIzmirBoundary() {
   beginShape();
   
   //to iterate through izmir.json
-  boundaryPoints = izmir.boundaryPoints;
+  let boundaryPoints = izmir.boundaryPoints;
   
-  for (const point of boundaryPoints) {
-    const pixelCoord = geoToPixel(point[0], point[1]);
+  for (let point of boundaryPoints) {
+    let pixelCoord = geoToPixel(point[0], point[1]);
     vertex(pixelCoord.x, pixelCoord.y);
   }
 
@@ -78,16 +88,19 @@ function drawDams() {
   // Draw each dam as a circle
   for (let feature of izsuData.features) {
     if (feature.geometry.type === "Point") {
-      const coords = feature.geometry.coordinates;
-      const pixelCoord = geoToPixel(coords[0], coords[1]);
+      let coords = feature.geometry.coordinates;
+      let pixelCoord = geoToPixel(coords[0], coords[1]);
 
       // Calculate circle size based on dam area
-      const area = feature.properties.area || 5;
-      const diameter = map(area, 0, 25, 10, 40);
+      let area = feature.properties.area || 5;
+      maxArea = Math.max(maxArea, area);
+      let diameter = map(area, 0, maxArea, 10, 40);
 
       // Draw water level as fill percentage
-      const waterLevel = feature.properties.currentWaterLevel || 50;
-      const fillHeight = (waterLevel / 100) * diameter;
+      //This line retrieves the current water level percentage for the dam.
+      let waterLevel = feature.properties.currentWaterLevel || 50;
+      //This line calculates how much of the dam circle should be filled to represent the water level.
+      let fillHeight = (waterLevel / 100) * diameter;
 
       // Draw dam circle
       stroke(0, 100, 200);
