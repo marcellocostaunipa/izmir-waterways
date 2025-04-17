@@ -1,5 +1,4 @@
 /* 
-
 Day 2: Detailed Map and Visual Representation
 
 **Morning Session: Detailed Geographic Representation**
@@ -38,16 +37,17 @@ let izmir;
 let maxArea = 25;
 
 function preload() {
-  izsuData = loadJSON('data/izsu.json');
-  izmir = loadJSON('data/izmir.json');
+  izsuData = loadJSON("data/izsu.json");
+  izmir = loadJSON("data/izmir.json");
 }
 
 function setup() {
   createCanvas(500, 500);
   textFont("Arial");
-  
+
   let features = izsuData.features;
-  for(let feature of features) {
+  for (let i = 0; i < izsuData.features.length; i++) {
+    let feature = izsuData.features[i];
     console.log(feature.properties.currentWaterLevel);
   }
 }
@@ -72,11 +72,12 @@ function drawIzmirBoundary() {
 
   // Simplified boundary for demonstration
   beginShape();
-  
-  //to iterate through izmir.json
+
+  // To iterate through izmir.json
   let boundaryPoints = izmir.boundaryPoints;
-  
-  for (let point of boundaryPoints) {
+
+  for (let i = 0; i < boundaryPoints.length; i++) {
+    let point = boundaryPoints[i];
     let pixelCoord = geoToPixel(point[0], point[1]);
     vertex(pixelCoord.x, pixelCoord.y);
   }
@@ -85,44 +86,68 @@ function drawIzmirBoundary() {
 }
 
 function drawDams() {
+  // Find the maximum and minimum volumes for scaling
+  let maxVolume = 0;
+  let minVolume = 0;
+
+  for (let i = 0; i < izsuData.features.length; i++) {
+    let feature = izsuData.features[i];
+    maxVolume = Math.max(maxVolume, feature.properties.maximum.lakeVolume);
+    minVolume = Math.min(minVolume, feature.properties.maximum.lakeVolume);
+  }
+
   // Draw each dam as a circle
-  for (let feature of izsuData.features) {
-    if (feature.geometry.type === "Point") {
-      let coords = feature.geometry.coordinates;
-      let pixelCoord = geoToPixel(coords[0], coords[1]);
+  for (let i = 0; i < izsuData.features.length; i++) {
+    let feature = izsuData.features[i];
 
-      // Calculate circle size based on dam area
-      let area = feature.properties.area || 5;
-      maxArea = Math.max(maxArea, area);
-      let diameter = map(area, 0, maxArea, 10, 40);
+    let coords = feature.geometry.coordinates;
+    let pixelCoord = geoToPixel(coords[0], coords[1]);
 
-      // Draw water level as fill percentage
-      //This line retrieves the current water level percentage for the dam.
-      let waterLevel = feature.properties.currentWaterLevel || 50;
-      //This line calculates how much of the dam circle should be filled to represent the water level.
-      let fillHeight = (waterLevel / 100) * diameter;
+    // Get the current year data (using 2025 as default)
+    let currentYearData;
+    let timelineEntry = feature.properties.timeline[0];
+    currentYearData = timelineEntry.y2025;
 
-      // Draw dam circle
-      stroke(0, 100, 200);
-      strokeWeight(2);
-      fill(255);
-      ellipse(pixelCoord.x, pixelCoord.y, diameter);
+    // Calculate circle size based on maximum lake volume
+    let maxLakeVolume = feature.properties.maximum.lakeVolume;
 
-      // Fill with water level
-      noStroke();
-      fill(0, 100, 255, 150);
-      ellipse(pixelCoord.x, pixelCoord.y, fillHeight);
+    // Scale min and max diameters
+    let minDiameter = 10;
+    let maxDiameter = 60;
 
-      // Draw dam name
-      fill(0);
-      textSize(12);
-      textAlign(CENTER);
-      text(
-        feature.properties.name,
-        pixelCoord.x,
-        pixelCoord.y - diameter / 2 - 5
-      );
-    }
+    let diameter;
+
+    diameter = map(
+      maxLakeVolume,
+      minVolume,
+      maxVolume,
+      minDiameter,
+      maxDiameter
+    );
+
+    // Draw dam circle
+    stroke(0, 100, 200);
+    strokeWeight(2);
+    fill(255);
+    ellipse(pixelCoord.x, pixelCoord.y, diameter);
+
+    // Draw water level as fill percentage if data is available
+    let activeFullnessRate = currentYearData.activeFullnessRate;
+    let fillDiameter = map(activeFullnessRate, 0, 100, 0, diameter);
+    
+    noStroke();
+    fill(0, 100, 255, 150);
+    ellipse(pixelCoord.x, pixelCoord.y, fillDiameter);
+
+    // Draw dam name
+    fill(0);
+    textSize(12);
+    textAlign(CENTER);
+    text(
+      feature.properties.name,
+      pixelCoord.x,
+      pixelCoord.y - diameter / 2 - 5
+    );
   }
 }
 

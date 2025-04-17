@@ -1,9 +1,6 @@
-
 /*************
 UTILITY FUNCTIONS
 **************/
-
-
 
 function geoToPixel(lon, lat) {
   // Convert geographic coordinates to pixel coordinates
@@ -13,7 +10,7 @@ function geoToPixel(lon, lat) {
   let x = map(
     lon,
     bounds.minLon, bounds.maxLon,
-    padding, width - padding
+    padding, (width-(width-height))/1.15 - padding
   );
   
   // Map latitude to y-coordinate with padding
@@ -21,7 +18,7 @@ function geoToPixel(lon, lat) {
   let y = map(
     lat,
     bounds.minLat, bounds.maxLat,
-    height - padding, padding
+    height/1.15 - padding, padding
   );
   
   return { x, y };
@@ -181,4 +178,17 @@ function calculateBounds(multiPolygon) {
   });
   
   return { minLon, maxLon, minLat, maxLat };
+}
+
+// Helper function to format volume in a readable way
+function formatVolume(volume) {
+  if (volume >= 1000000000) {
+    return (volume / 1000000000).toFixed(2) + " billion m³";
+  } else if (volume >= 1000000) {
+    return (volume / 1000000).toFixed(2) + " million m³";
+  } else if (volume >= 1000) {
+    return (volume / 1000).toFixed(2) + " thousand m³";
+  } else {
+    return volume.toFixed(0) + " m³";
+  }
 }

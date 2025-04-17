@@ -1,9 +1,6 @@
-
 /*************
 UTILITY FUNCTIONS
 **************/
-
-
 
 function geoToPixel(lon, lat) {
   // Convert geographic coordinates to pixel coordinates

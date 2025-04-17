@@ -71,10 +71,11 @@ function drawIzmirBoundary() {
   // Simplified boundary for demonstration
   beginShape();
 
-  //to iterate through izmir.json
-  boundaryPoints = izmir.boundaryPoints;
+  // To iterate through izmir.json
+  let boundaryPoints = izmir.boundaryPoints;
 
-  for (let point of boundaryPoints) {
+  for (let i = 0; i < boundaryPoints.length; i++) {
+    let point = boundaryPoints[i];
     let pixelCoord = geoToPixel(point[0], point[1]);
     vertex(pixelCoord.x, pixelCoord.y);
   }
@@ -86,71 +87,118 @@ function drawDams() {
   // Reset hovered dam
   hoveredDam = null;
 
+  // Find the maximum and minimum volumes for scaling
+  let maxVolume = 0;
+  let minVolume = 0;
+  for (let i = 0; i < izsuData.features.length; i++) {
+    let feature = izsuData.features[i];
+    maxVolume = Math.max(maxVolume, feature.properties.maximum.lakeVolume);
+    minVolume = Math.min(minVolume, feature.properties.maximum.lakeVolume);
+  }
+
   // Draw each dam as a circle
-  for (let feature of izsuData.features) {
-    if (feature.geometry.type === "Point") {
-      let coords = feature.geometry.coordinates;
-      let pixelCoord = geoToPixel(coords[0], coords[1]);
+  for (let i = 0; i < izsuData.features.length; i++) {
+    let feature = izsuData.features[i];
 
-      // Calculate circle size based on dam area
-      let area = feature.properties.area || 5;
-      let diameter = map(area, 0, 25, 10, 40);
+    let coords = feature.geometry.coordinates;
+    let pixelCoord = geoToPixel(coords[0], coords[1]);
 
-      // Draw water level as fill percentage
-      let waterLevel = feature.properties.currentWaterLevel || 50;
-      let fillHeight = (waterLevel / 100) * diameter;
+    // Get the current year data (using 2025 as default)
+    let currentYearData;
+    let timelineEntry = feature.properties.timeline[0];
+    currentYearData = timelineEntry.y2025;
 
-      // Draw dam circle
-      stroke(0, 100, 200);
+    // Calculate circle size based on maximum lake volume
+    let maxLakeVolume = feature.properties.maximum.lakeVolume;
+
+    // Scale min and max diameters
+    let minDiameter = 10;
+    let maxDiameter = 60;
+
+    let diameter;
+
+    diameter = map(
+      maxLakeVolume,
+      minVolume,
+      maxVolume,
+      minDiameter,
+      maxDiameter
+    );
+
+    // Draw dam circle
+    stroke(0, 100, 200);
+    strokeWeight(2);
+    fill(255);
+    ellipse(pixelCoord.x, pixelCoord.y, diameter);
+
+    // Draw water level as fill percentage if data is available
+    let activeFullnessRate = currentYearData.activeFullnessRate;
+    let fillDiameter = map(activeFullnessRate, 0, 100, 0, diameter);
+    
+    noStroke();
+    fill(0, 100, 255, 150);
+    ellipse(pixelCoord.x, pixelCoord.y, fillDiameter);
+
+    // Check if mouse is over this dam
+    if (dist(mouseX, mouseY, pixelCoord.x, pixelCoord.y) < diameter / 2) {
+      // Highlight on hover
+      noFill();
+      stroke(255, 100, 0);
       strokeWeight(2);
+      ellipse(pixelCoord.x, pixelCoord.y, diameter + 5);
+
+      // Show tooltip with volume information
       fill(255);
-      ellipse(pixelCoord.x, pixelCoord.y, diameter);
+      stroke(0);
+      strokeWeight(1);
 
-      // Fill with water level
-      noStroke();
-      fill(0, 100, 255, 150);
-      ellipse(pixelCoord.x, pixelCoord.y, fillHeight);
+      // Position tooltip to avoid going off-screen
+      let tooltipX = mouseX + 10;
+      let tooltipY = mouseY;
+      let tooltipWidth = 185;
+      let tooltipHeight = 80;
 
-      // Draw dam name
+      // Adjust if too close to right edge
+      if (tooltipX + tooltipWidth > width) {
+        tooltipX = mouseX - tooltipWidth - 10;
+      }
+
+      rect(tooltipX, tooltipY, tooltipWidth, tooltipHeight);
+
       fill(0);
+      noStroke();
+      textAlign(LEFT);
       textSize(12);
-      textAlign(CENTER);
       text(
-        feature.properties.name,
-        pixelCoord.x,
-        pixelCoord.y - diameter / 2 - 5
+        feature.properties.name, 
+        tooltipX + 5, 
+        tooltipY + 15
+      );
+      text(
+        "Max Volume: " + formatVolume(maxLakeVolume),
+        tooltipX + 5,
+        tooltipY + 35
       );
 
-      // Check if mouse is over this dam
-      if (dist(mouseX, mouseY, pixelCoord.x, pixelCoord.y) < diameter / 2) {
-        // Highlight on hover
-        noFill();
-        stroke(255, 100, 0);
-        strokeWeight(2);
-        ellipse(pixelCoord.x, pixelCoord.y, diameter + 5);
+      if (currentYearData) {
+        text(
+          "Current Volume: " + formatVolume(currentYearData.totalWaterVolume),
+          tooltipX + 5,
+          tooltipY + 55
+        );
+        text(
+          "Fullness: " + currentYearData.activeFullnessRate.toFixed(1) + "%",
+          tooltipX + 5,
+          tooltipY + 75
+        );
+      }
 
-        // Set as hovered dam
-        hoveredDam = feature;
+      // Set as selected dam if clicked
+      if (mouseIsPressed) {
+        selectedDam = feature;
       }
     }
   }
-}
-
-function drawTooltip(dam) {
-  // Draw tooltip near mouse
-  fill(255);
-  stroke(0);
-  strokeWeight(1);
-  rect(mouseX + 10, mouseY, 120, 60);
-
-  // Dam information
-  fill(0);
-  noStroke();
-  textAlign(LEFT);
-  textSize(12);
-  text(dam.properties.name, mouseX + 15, mouseY + 15);
-  text("Area: " + dam.properties.area + " km²", mouseX + 15, mouseY + 30);
-  text("Water Level: " + dam.properties.currentWaterLevel + "%", mouseX + 15, mouseY + 45);
 }
 
 function drawUI() {
@@ -162,7 +210,6 @@ function drawUI() {
   textAlign(LEFT);
   text("Izmir Water Resources (DAY 3)", 20, 30);
 
-  
   // Legend
   textSize(12);
   textAlign(LEFT);

@@ -1,5 +1,4 @@
 /* 
-
 Day 01: Basic Map and Geographic Concepts
 
 **Morning Session: Fundamentals of p5.js and Geographic Concepts**
@@ -35,20 +34,19 @@ let bounds = {
 let jsonData;
 
 function preload() {
-  izsuData = loadJSON('data/izsu.json');
+  izsuData = loadJSON("data/izsu.json");
 }
 
 function setup() {
   createCanvas(500, 500);
   textFont("Arial");
-  
+
   let features = izsuData.features;
-  for(let feature of features) {
+  for (let i = 0; i < izsuData.features.length; i++) {
+    let feature = izsuData.features[i];
     console.log(feature.properties);
   }
-}
 
-function draw() {
   background(240);
 
   // Draw a simple rectangle to represent Izmir province
@@ -69,21 +67,20 @@ function draw() {
 
 function drawDams() {
   // Draw each dam as a circle
-  for (let feature of izsuData.features) {
-    if (feature.geometry.type === "Point") {
-      let coords = feature.geometry.coordinates;
-      let pixelCoord = geoToPixel(coords[0], coords[1]);
+  for (let i = 0; i < izsuData.features.length; i++) {
+    let feature = izsuData.features[i];
+    let coords = feature.geometry.coordinates;
+    let pixelCoord = geoToPixel(coords[0], coords[1]);
 
-      // Draw dam circle
-      fill(0, 100, 255);
-      noStroke();
-      ellipse(pixelCoord.x, pixelCoord.y, 20);
+    // Draw dam circle
+    fill(0, 100, 255);
+    noStroke();
+    ellipse(pixelCoord.x, pixelCoord.y, 20);
 
-      // Draw dam name
-      fill(0);
-      textSize(12);
-      textAlign(CENTER);
-      text(feature.properties.name, pixelCoord.x, pixelCoord.y - 15);
-    }
+    // Draw dam name
+    fill(0);
+    textSize(12);
+    textAlign(CENTER);
+    text(feature.properties.name, pixelCoord.x, pixelCoord.y - 15);
   }
 }
