@@ -3,7 +3,12 @@ DAY 05: Alternative Visualizations
 */
 
 let izsuData;
+let izmir;
 let damShapes = {}; // Object to store dam shape data by name
+
+let features;
+let maxVolume = 0;
+let minVolume = 0;
 
 // Initially, no dam is being hovered
 let hoveredDam = null;
@@ -26,11 +31,6 @@ function preload() {
 
 function setup() {
   createCanvas(800, 600);
-
-  panelWidth = 280;
-  panelHeight = 300;
-  panelX = width - panelWidth - 20;
-  panelY = 20;
 }
 
 function draw() {
@@ -48,9 +48,6 @@ function draw() {
 }
 
 function drawDams(damsPerRow) {
-  // Find the maximum and minimum volumes for scaling
-  let maxVolume = 0;
-  let minVolume = 0;
 
   for (let i = 0; i < izsuData.features.length; i++) {
     let feature = izsuData.features[i];
@@ -95,9 +92,7 @@ function drawDams(damsPerRow) {
         let minDiameter = cellWidth * 0.2;
         let maxDiameter = cellWidth * 0.7;
 
-        let diameter;
-
-        diameter = map(
+        let diameter = map(
           maxLakeVolume,
           minVolume,
           maxVolume,
@@ -178,7 +173,7 @@ function drawDamDetails(dam) {
   let panelHeight = 320; // Increased height to accommodate more information
   let panelX = width - panelWidth - 20;
   let panelY = 50;
-
+  
   push();
   translate(panelX, panelY);
 
@@ -509,7 +504,7 @@ function drawUI() {
   fill(0);
   noStroke();
   text("Capacity", 45, height - 56);
-  text("Water level", 45, height - 36);
+  text("Active Fullness Rate", 45, height - 36);
 
   // Attribution
   textSize(8);

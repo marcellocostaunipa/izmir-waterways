@@ -32,6 +32,13 @@ let bounds = {
   maxLat: 39.46,
 };
 
+let izsuData;
+let izmir;
+
+let features;
+let maxVolume = 0;
+let minVolume = 0;
+
 // Initially, no dam is being hovered
 let hoveredDam = null;
 // Track which dam is selected
@@ -50,11 +57,6 @@ function preload() {
 function setup() {
   createCanvas(500, 500);
   textFont("Arial");
-
-  panelWidth = 280;
-  panelHeight = 300;
-  panelX = width - panelWidth - 20;
-  panelY = 50;
 }
 
 function draw() {
@@ -97,20 +99,14 @@ function drawIzmirBoundary() {
 
 function drawDams() {
   // Reset hovered dam
-  hoveredDam = null;
-
-  // Find the maximum and minimum volumes for scaling
-  let maxVolume = 0;
-  let minVolume = 0;
-  for (let i = 0; i < izsuData.features.length; i++) {
-    let feature = izsuData.features[i];
-    maxVolume = Math.max(maxVolume, feature.properties.maximum.lakeVolume);
-    minVolume = Math.min(minVolume, feature.properties.maximum.lakeVolume);
-  }
+//   hoveredDam = null;
 
   // Draw each dam as a circle
   for (let i = 0; i < izsuData.features.length; i++) {
     let feature = izsuData.features[i];
+    
+    maxVolume = Math.max(maxVolume, feature.properties.maximum.lakeVolume);
+    minVolume = Math.min(minVolume, feature.properties.maximum.lakeVolume);
 
     let coords = feature.geometry.coordinates;
     let pixelCoord = geoToPixel(coords[0], coords[1]);
@@ -127,9 +123,7 @@ function drawDams() {
     let minDiameter = 10;
     let maxDiameter = 60;
 
-    let diameter;
-
-    diameter = map(
+    let diameter = map(
       maxLakeVolume,
       minVolume,
       maxVolume,
@@ -480,7 +474,7 @@ function drawUI() {
   fill(0);
   noStroke();
   text("Capacity", 45, height - 56);
-  text("Water level", 45, height - 36);
+  text("Active Fullness Rate", 45, height - 36);
 
   // Attribution
   textSize(8);

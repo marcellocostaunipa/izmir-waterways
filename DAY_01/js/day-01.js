@@ -1,4 +1,5 @@
 /* 
+
 Day 01: Basic Map and Geographic Concepts
 
 **Morning Session: Fundamentals of p5.js and Geographic Concepts**
@@ -31,7 +32,7 @@ let bounds = {
   maxLat: 39.46,
 };
 
-let jsonData;
+let features;
 
 function preload() {
   izsuData = loadJSON("data/izsu.json");
@@ -41,18 +42,11 @@ function setup() {
   createCanvas(500, 500);
   textFont("Arial");
 
-  let features = izsuData.features;
-  for (let i = 0; i < izsuData.features.length; i++) {
-    let feature = izsuData.features[i];
-    console.log(feature.properties);
-  }
-
   background(240);
 
   // Draw a simple rectangle to represent Izmir province
   fill(255);
-  stroke(0);
-  strokeWeight(1);
+  noStroke();
   rect(50, 50, width - 100, height - 100);
 
   // Draw the dams as simple circles
@@ -68,7 +62,10 @@ function setup() {
 function drawDams() {
   // Draw each dam as a circle
   for (let i = 0; i < izsuData.features.length; i++) {
-    let feature = izsuData.features[i];
+    
+    feature = izsuData.features[i];
+    console.log(feature.properties);
+    
     let coords = feature.geometry.coordinates;
     let pixelCoord = geoToPixel(coords[0], coords[1]);
 
