@@ -1,0 +1,125 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', Helvetica, Arial, sans-serif;
+  }
+
+  .fp-tooltip {
+    color: #000 !important;
+  }
+  
+  .canvas-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+
+  #defaultCanvas0 {
+    width: 50% !important;
+    height: 50% !important;
+  }
+  
+  #info-container {
+    margin: 20px;
+    width: 300px;
+  }
+  
+  h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  p {
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 15px;
+  }
+  
+  /* Dam details styling */
+  #dam-details-container {
+    background-color: white;
+    border: 1px solid #000;
+    padding: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    position: absolute;
+    left: 80px;
+    top: 80px;
+    width: 280px;
+    display: none;
+    text-align: left;
+  }
+  
+  #dam-title {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 18px;
+  }
+  
+  #dam-details-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  #dam-details-list li {
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+  
+  .fullness-bar-container {
+    width: 100%;
+    height: 20px;
+    border: 1px solid #000;
+    margin-top: 15px;
+    position: relative;
+  }
+  
+  .fullness-bar-fill {
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+  
+  .fullness-bar-text {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    line-height: 20px;
+    color: #000;
+  }
+  
+  #close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  
+  #chart-container {
+    margin-top: 15px;
+    height: 100px;
+  }
+  
+  .chart-title {
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .chart-canvas {
+    width: 100%;
+    height: 80px;
+    background-color: #f5f5f5;
+  }
+  
+  .chart-canvas canvas {
+    width: 100% !important;
+    height: 80px !important;
+  }
+  

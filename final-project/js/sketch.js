@@ -2,33 +2,6 @@
 Final Project
 */
 
-/* 
-
-Day 4: Detailed Information Panel and Final Touches
-
-**Morning Session: Data Visualization Enhancements**
-
-- Creating charts and graphs within p5.js
-- Visualizing time-series data
-- Animation techniques
-- Implementing multiple view modes
-
-**Afternoon Session: Polishing and Extending the Project**
-
-- Refining the user interface
-- Adding finishing touches
-- Exploring additional features
-- Deploying and sharing your visualization
-
-**Hands-on Exercise:**
-
-- Implement a detailed information panel for selected dams
-- Create a timeline chart showing historical water levels
-- Add animation capabilities to visualize changes over time
-- Enhance the project with additional features like comparison views or filtering options
-
-*/
-
 let bounds = {
   minLon: 26.35,
   maxLon: 28.56,
@@ -36,15 +9,19 @@ let bounds = {
   maxLat: 39.46,
 };
 
+let izsuData;
+let izmir;
+
+let features;
+let maxVolume = 0;
+let minVolume = 0;
+
 // Initially, no dam is being hovered
 let hoveredDam = null;
-// Track which dam is selected
+// Initially, no dam is selected
 let selectedDam = null;
-
-let panelWidth;
-let panelHeight;
-let panelX;
-let panelY;
+// Keep track of previously selected dam to detect changes
+let previousSelectedDam = null
 
 function preload() {
   izsuData = loadJSON("data/izsu.json");
@@ -53,12 +30,6 @@ function preload() {
 
 function setup() {
   createCanvas(500, 500);
-  textFont("Arial");
-
-  panelWidth = 280;
-  panelHeight = 300;
-  panelX = width - panelWidth - 20;
-  panelY = 50;
 
   // Create canvas inside the sketch-holder div
     const sketchHolder = document.getElementById("sketch-holder")
@@ -73,7 +44,22 @@ function setup() {
       // Fallback if the sketch-holder div is not found
       canvas = createCanvas(canvasWidth, canvasHeight)
     }
+
+    const closeButton = document.getElementById("close-button")
+    if (closeButton) {
+      closeButton.addEventListener("click", (e) => {
+        // Stop event propagation to prevent any parent handlers from firing
+        e.stopPropagation()
+        // Reset selected dam
+        selectedDam = null
+        previousSelectedDam = null
+        // Hide the details container
+        document.getElementById("dam-details-container").style.display = "none"
+      })
+      console.log("Close button event listener attached")
+    }
 }
+
 
 function draw() {
   background(240);
@@ -87,9 +73,10 @@ function draw() {
   // Draw UI elements
   drawUI();
 
-  // Draw selected dam details
-  if (selectedDam) {
-    drawDamDetails(selectedDam);
+  // Update the HTML details panel if a dam is selected
+  if (selectedDam !== previousSelectedDam) {
+    updateDamDetailsHTML(selectedDam);
+    previousSelectedDam = selectedDam;
   }
 }
 
@@ -114,21 +101,12 @@ function drawIzmirBoundary() {
 }
 
 function drawDams() {
-  // Reset hovered dam
-  hoveredDam = null;
-
-  // Find the maximum and minimum volumes for scaling
-  let maxVolume = 0;
-  let minVolume = 0;
-  for (let i = 0; i < izsuData.features.length; i++) {
-    let feature = izsuData.features[i];
-    maxVolume = Math.max(maxVolume, feature.properties.maximum.lakeVolume);
-    minVolume = Math.min(minVolume, feature.properties.maximum.lakeVolume);
-  }
-
   // Draw each dam as a circle
   for (let i = 0; i < izsuData.features.length; i++) {
     let feature = izsuData.features[i];
+
+    maxVolume = Math.max(maxVolume, feature.properties.maximum.lakeVolume);
+    minVolume = Math.min(minVolume, feature.properties.maximum.lakeVolume);
 
     let coords = feature.geometry.coordinates;
     let pixelCoord = geoToPixel(coords[0], coords[1]);
@@ -142,12 +120,10 @@ function drawDams() {
     let maxLakeVolume = feature.properties.maximum.lakeVolume;
 
     // Scale min and max diameters
-    let minDiameter = 20;
-    let maxDiameter = 80;
+    let minDiameter = 30;
+    let maxDiameter = 90;
 
-    let diameter;
-
-    diameter = map(
+    let diameter = map(
       maxLakeVolume,
       minVolume,
       maxVolume,
@@ -168,13 +144,23 @@ function drawDams() {
     fill(0, 100, 255, 150);
     ellipse(pixelCoord.x, pixelCoord.y, fillDiameter);
 
-   // Check if mouse is over this dam
+    // Check if this is the selected dam and draw the red outline if it is
+    if (selectedDam === feature) {
+      noFill()
+      stroke(255, 100, 0)
+      strokeWeight(3) // Make it slightly thicker for the selected dam
+      ellipse(pixelCoord.x, pixelCoord.y, diameter + 8) // Make it slightly larger for emphasis
+    }
+
+    // Check if mouse is over this dam
     if (dist(mouseX, mouseY, pixelCoord.x, pixelCoord.y) < diameter / 2) {
-      // Highlight on hover
-      noFill();
-      stroke(255, 100, 0);
-      strokeWeight(2);
-      ellipse(pixelCoord.x, pixelCoord.y, diameter + 5);
+      // Highlight on hover (only if not already selected)
+      if (selectedDam !== feature) {
+        noFill()
+        stroke(255, 100, 0)
+        strokeWeight(2)
+        ellipse(pixelCoord.x, pixelCoord.y, diameter + 5)
+      }
 
       // Show tooltip with volume information
       fill(255);
@@ -198,11 +184,7 @@ function drawDams() {
       noStroke();
       textAlign(LEFT);
       textSize(12);
-      text(
-        feature.properties.name, 
-        tooltipX + 5, 
-        tooltipY + 15
-      );
+      text(feature.properties.name, tooltipX + 5, tooltipY + 15);
       text(
         "Max Volume: " + formatVolume(maxLakeVolume),
         tooltipX + 5,
@@ -221,259 +203,216 @@ function drawDams() {
           tooltipY + 75
         );
       }
-      
+
       // Set as selected dam if clicked
       if (mouseIsPressed) {
-        selectedDam = feature;
+        // Only update if a different dam is selected
+        if (selectedDam !== feature) {
+          selectedDam = feature
+          // Show the details container
+          document.getElementById("dam-details-container").style.display = "block"
+        }
       }
     }
   }
 }
 
-function drawDamDetails(dam) {
-  // Draw detailed information panel for the selected dam
-  let panelWidth = 280;
-  let panelHeight = 320; // Increased height to accommodate more information
-  let panelX = width - panelWidth - 20;
-  let panelY = 50;
+// Update the HTML details panel
+function updateDamDetailsHTML(dam) {
+  if (!dam) return;
 
-  push();
-  translate(panelX, panelY);
+  // Get the HTML elements using standard DOM methods
+  let titleElement = document.getElementById("dam-title");
+  let detailsList = document.getElementById("dam-details-list");
+  let chartContainer = document.getElementById("chart-container");
 
-  // Panel background
-  fill(255);
-  stroke(0);
-  strokeWeight(1);
-  rect(0, 0, panelWidth, panelHeight);
+  // Update the title
+  titleElement.textContent = dam.properties.name;
 
-  // Dam information
-  fill(0);
-  noStroke();
-  textSize(16);
-  textAlign(LEFT);
-  text(dam.properties.name, 10, 25);
-
-  textSize(12);
-
-  // Display area if available
-  if (dam.properties.area) {
-    text("Surface Area: " + dam.properties.area + " km²", 10, 50);
-  }
+  // Clear previous details
+  detailsList.innerHTML = "";
 
   // Get the current year data (2025)
   let currentYearData;
   if (dam.properties.timeline && dam.properties.timeline.length > 0) {
-    const timelineEntry = dam.properties.timeline[0];
+    let timelineEntry = dam.properties.timeline[0];
     currentYearData = timelineEntry.y2025;
+  }
+
+  // Display area if available
+  if (dam.properties.area) {
+    let areaItem = document.createElement("li");
+    areaItem.textContent = "Surface Area: " + dam.properties.area + " km²";
+    detailsList.appendChild(areaItem);
   }
 
   // Display maximum capacity
   let maxVolume;
   if (dam.properties.maximum) {
     maxVolume = dam.properties.maximum.lakeVolume;
-  } else {
-    maxVolume = 0;
+    let maxVolumeItem = document.createElement("li");
+    maxVolumeItem.textContent = "Maximum Capacity: " + formatVolume(maxVolume);
+    detailsList.appendChild(maxVolumeItem);
   }
-  text("Maximum Capacity: " + formatVolume(maxVolume), 10, 70);
 
   // Display current water data if available
-  let yPos = 90;
   if (currentYearData) {
-    text(
+    // Water level
+    let waterLevelItem = document.createElement("li");
+    waterLevelItem.textContent =
       "Current Water Level: " +
-        currentYearData.lakeWaterElevation.toFixed(2) +
-        " m",
-      10,
-      yPos
-    );
-    yPos += 20;
+      currentYearData.lakeWaterElevation.toFixed(2) +
+      " m";
+    detailsList.appendChild(waterLevelItem);
 
-    text(
-      "Current Volume: " + formatVolume(currentYearData.totalWaterVolume),
-      10,
-      yPos
-    );
-    yPos += 20;
+    // Current volume
+    let currentVolumeItem = document.createElement("li");
+    currentVolumeItem.textContent =
+      "Current Volume: " + formatVolume(currentYearData.totalWaterVolume);
+    detailsList.appendChild(currentVolumeItem);
 
-    text(
-      "Usable Volume: " + formatVolume(currentYearData.usableWaterVolume),
-      10,
-      yPos
-    );
-    yPos += 20;
+    // Usable volume
+    let usableVolumeItem = document.createElement("li");
+    usableVolumeItem.textContent =
+      "Usable Volume: " + formatVolume(currentYearData.usableWaterVolume);
+    detailsList.appendChild(usableVolumeItem);
 
-    text(
-      "Fullness Rate: " + currentYearData.activeFullnessRate.toFixed(2) + "%",
-      10,
-      yPos
-    );
-    yPos += 30;
+    // Fullness rate with bar
+    let fullnessItem = document.createElement("li");
+    fullnessItem.textContent =
+      "Fullness Rate: " + currentYearData.activeFullnessRate.toFixed(2) + "%";
 
-    // Draw water level bar
-    let barWidth = panelWidth - 20;
-    let barHeight = 20;
-    let barX = 10;
-    let barY = yPos;
+    // Create fullness bar container
+    let barContainer = document.createElement("div");
+    barContainer.className = "fullness-bar-container";
 
-    // Bar outline
-    noFill();
-    stroke(0);
-    strokeWeight(1);
-    rect(barX, barY, barWidth, barHeight);
-
-    // Fill based on water level
-    let fillWidth = (currentYearData.activeFullnessRate / 100) * barWidth;
+    // Create fullness bar fill
+    let barFill = document.createElement("div");
+    barFill.className = "fullness-bar-fill";
+    barFill.style.width = currentYearData.activeFullnessRate + "%";
+    
+//     console.log(currentYearData.activeFullnessRate);
 
     // Color coding based on fullness rate
     let fillColor;
     if (currentYearData.activeFullnessRate < 30) {
-      fillColor = color(255, 0, 0, 150); // Red for low levels
+      fillColor = "rgba(255, 0, 0, 0.6)"; // Red for low levels
     } else if (currentYearData.activeFullnessRate < 60) {
-      fillColor = color(255, 165, 0, 150); // Orange for medium levels
+      fillColor = "rgba(255, 165, 0, 0.6)"; // Orange for medium levels
     } else {
-      fillColor = color(0, 100, 255, 150); // Blue for high levels
+      fillColor = "rgba(0, 100, 255, 0.6)"; // Blue for high levels
     }
+    barFill.style.backgroundColor = fillColor;
 
-    fill(fillColor);
-    noStroke();
-    rect(barX, barY, fillWidth, barHeight);
+    // Create fullness bar text
+    let barText = document.createElement("div");
+    barText.className = "fullness-bar-text";
+    barText.textContent = currentYearData.activeFullnessRate.toFixed(1) + "%";
 
-    // Add percentage text on the bar
-    fill(0);
-    textAlign(CENTER);
-    text(
-      currentYearData.activeFullnessRate.toFixed(1) + "%",
-      barX + barWidth / 2,
-      barY + barHeight / 2 + 4
-    );
+    // Assemble the bar
+    barContainer.appendChild(barFill);
+    barContainer.appendChild(barText);
+    fullnessItem.appendChild(barContainer);
 
-    yPos += barHeight + 20;
+    // Add to list
+    detailsList.appendChild(fullnessItem);
   }
 
-  // Draw timeline if available
+  // Draw timeline chart if available
   if (dam.properties.timeline && dam.properties.timeline.length > 0) {
-    textAlign(LEFT);
-    fill(0);
-    text("Historical Fullness Rates:", 10, yPos);
-    yPos += 20;
+    // Clear previous chart
+    chartContainer.innerHTML = "";
 
-    // Simple line chart
-    let chartWidth = panelWidth - 60;
-    let chartHeight = 60;
-    let chartX = 35;
-    let chartY = yPos;
+    // Add chart title
+    let chartTitle = document.createElement("div");
+    chartTitle.className = "chart-title";
+    chartTitle.textContent = "Historical Fullness Rates:";
+    chartContainer.appendChild(chartTitle);
 
-    // Chart background
-    fill(245);
-    noStroke();
-    rect(chartX, chartY, chartWidth, chartHeight);
+    // Create canvas for the chart
+    let chartCanvasContainer = document.createElement("div");
+    chartCanvasContainer.className = "chart-canvas";
+    chartCanvasContainer.id = "timeline-chart-container";
+    chartContainer.appendChild(chartCanvasContainer);
 
-    // Chart axes
-    stroke(0);
-    strokeWeight(1);
-    line(
-      chartX,
-      chartY + chartHeight,
-      chartX + chartWidth,
-      chartY + chartHeight
-    ); // x-axis
-    line(chartX, chartY, chartX, chartY + chartHeight); // y-axis
+    // Create a new p5.js instance for the chart
+    new p5((p) => {
+      p.setup = () => {
+        // Create a canvas that fits the container
+        let canvasWidth = chartCanvasContainer.offsetWidth || 240; // Default width if not set
+        p.createCanvas(canvasWidth, 85);
 
-    // Get timeline data
-    let timelineEntry = dam.properties.timeline[0];
-    let years = ["y2021", "y2022", "y2023", "y2024", "y2025"];
-    let fullnessRates = years.map(
-      (year) => timelineEntry[year].activeFullnessRate
-    );
+        // Get timeline data
+        let timelineEntry = dam.properties.timeline[0];
+        let years = ["y2021", "y2022", "y2023", "y2024", "y2025"];
+        let fullnessRates = [];
 
-    // Draw year labels
-    fill(0);
-    noStroke();
-    textAlign(CENTER);
-    textSize(9);
+        for (let i = 0; i < years.length; i++) {
+          let year = years[i];
+          fullnessRates.push(timelineEntry[year].activeFullnessRate);
+        }
 
-    // Using a simple for loop
-    for (let i = 0; i < years.length; i++) {
-      let x = map(i, 0, years.length - 1, chartX, chartX + chartWidth);
-      text(years[i].substring(1), x, chartY + chartHeight + 12); // Remove the 'y' prefix
-    }
+        // Draw the chart
+        p.background(245);
 
-    // Draw grid lines and percentage labels
-    stroke(200);
-    strokeWeight(0.5);
-    textAlign(RIGHT);
-    textSize(8);
+        // Draw grid lines and percentage labels
+        p.stroke(200);
+        p.strokeWeight(0.5);
 
-    for (let percent = 0; percent <= 100; percent += 25) {
-      let y = map(percent, 0, 100, chartY + chartHeight, chartY);
-      line(chartX, y, chartX + chartWidth, y);
-      fill(0);
-      text(percent + "%", chartX - 5, y + 3);
-    }
+        for (let percent = 0; percent <= 100; percent += 25) {
+          let y = p.map(percent, 0, 100, 70, 10);
+          p.stroke(0);
+          p.line(30, y, p.width - 10, y);
+          p.fill(0);
+          p.noStroke();
+          p.textSize(8);
+          p.textAlign(p.RIGHT);
+          p.text(percent + "%", 25, y + 3);
+        }
 
-    // Plot lines connecting fullness rates
-    stroke(0, 100, 200);
-    strokeWeight(2);
-    noFill();
-    beginShape();
+        // Draw year labels
+        for (let i = 0; i < years.length; i++) {
+          let x = p.map(i, 0, years.length - 1, 30, p.width - 10);
+          p.fill(0);
+          p.noStroke();
+          p.textSize(8);
+          p.textAlign(p.CENTER);
+          p.text(years[i].substring(1), x, 83);
+        }
 
-    // Using a simple for loop with map() function
-    for (let i = 0; i < fullnessRates.length; i++) {
-      const rate = fullnessRates[i];
-      const x = map(
-        i,
-        0,
-        fullnessRates.length - 1,
-        chartX,
-        chartX + chartWidth
-      );
-      const y = map(rate, 0, 100, chartY + chartHeight, chartY);
-      vertex(x, y);
-    }
+        // Plot lines connecting fullness rates
+        p.stroke(0, 100, 200);
+        p.strokeWeight(2);
+        p.noFill();
+        p.beginShape();
 
-    endShape();
+        for (let i = 0; i < fullnessRates.length; i++) {
+          let rate = fullnessRates[i];
+          let x = p.map(i, 0, fullnessRates.length - 1, 30, p.width - 10);
+          let y = p.map(rate, 0, 100, 70, 10);
+          p.vertex(x, y);
+        }
 
-    // Plot points
-    fill(0, 100, 200);
-    noStroke();
+        p.endShape();
 
-    // Using a simple for loop with map() function for drawing ellipses
-    for (let i = 0; i < fullnessRates.length; i++) {
-      const rate = fullnessRates[i];
-      const x = map(
-        i,
-        0,
-        fullnessRates.length - 1,
-        chartX,
-        chartX + chartWidth
-      );
-      const y = map(rate, 0, 100, chartY + chartHeight, chartY);
-      ellipse(x, y, 6, 6);
-    }
-  }
+        // Plot points
+        p.fill(0, 100, 200);
+        p.noStroke();
 
-  // Close button
-  stroke(0);
-  strokeWeight(2);
-  line(panelWidth - 18, 8, panelWidth - 8, 18);
-  line(panelWidth - 8, 8, panelWidth - 18, 18);
-
-  pop();
-
-  // Check if close button is clicked - using global coordinates
-  if (
-    mouseIsPressed &&
-    mouseX > panelX + panelWidth - 18 &&
-    mouseX < panelX + panelWidth - 8 &&
-    mouseY > panelY + 8 &&
-    mouseY < panelY + 18
-  ) {
-    selectedDam = null;
+        for (let i = 0; i < fullnessRates.length; i++) {
+          let rate = fullnessRates[i];
+          let x = p.map(i, 0, fullnessRates.length - 1, 30, p.width - 10);
+          let y = p.map(rate, 0, 100, 70, 10);
+          p.ellipse(x, y, 6, 6);
+        }
+      };
+    }, chartCanvasContainer);
   }
 }
 
 function drawUI() {
   push();
+
 
   // Legend
   textSize(12);
@@ -491,26 +430,10 @@ function drawUI() {
   fill(0);
   noStroke();
   text("Capacity", 45, height - 56);
-  text("Water level", 45, height - 36);
+  text("Active Fullness Rate", 45, height - 36);
 
   // Attribution
   textSize(8);
   text("2025 - Waterways Workshop", width - 115, height - 10);
   pop();
-}
-
-// If click is outside the panel, deselect the dam
-function mousePressed() {
-  if (selectedDam) {
-    if (
-      !(
-        mouseX > panelX &&
-        mouseX < panelX + panelWidth &&
-        mouseY > panelY &&
-        mouseY < panelY + panelHeight
-      )
-    ) {
-      selectedDam = null;
-    }
-  }
 }
