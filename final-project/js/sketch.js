@@ -49,14 +49,14 @@ function setup() {
     if (closeButton) {
       closeButton.addEventListener("click", (e) => {
         // Stop event propagation to prevent any parent handlers from firing
-        e.stopPropagation()
+        e.stopPropagation();
         // Reset selected dam
-        selectedDam = null
-        previousSelectedDam = null
+        selectedDam = null;
+        previousSelectedDam = null;
         // Hide the details container
-        document.getElementById("dam-details-container").style.display = "none"
+        document.getElementById("dam-details-container").style.display = "none";
       })
-      console.log("Close button event listener attached")
+      //console.log("Close button event listener attached");
     }
 }
 
@@ -73,7 +73,7 @@ function draw() {
   // Draw UI elements
   drawUI();
 
-  // Update the HTML details panel if a dam is selected
+  // Update the HTML details panel if a dam is selected (avoid draw() loop)
   if (selectedDam !== previousSelectedDam) {
     updateDamDetailsHTML(selectedDam);
     previousSelectedDam = selectedDam;
@@ -92,6 +92,7 @@ function drawIzmirBoundary() {
   let boundaryPoints = izmir.boundaryPoints;
 
   for (let i = 0; i < boundaryPoints.length; i++) {
+    //console.log(boundaryPoints);
     let point = boundaryPoints[i];
     let pixelCoord = geoToPixel(point[0], point[1]);
     vertex(pixelCoord.x, pixelCoord.y);
@@ -104,6 +105,7 @@ function drawDams() {
   // Draw each dam as a circle
   for (let i = 0; i < izsuData.features.length; i++) {
     let feature = izsuData.features[i];
+    //console.log(feature);
 
     maxVolume = Math.max(maxVolume, feature.properties.maximum.lakeVolume);
     minVolume = Math.min(minVolume, feature.properties.maximum.lakeVolume);
@@ -116,6 +118,8 @@ function drawDams() {
     let timelineEntry = feature.properties.timeline[0];
     currentYearData = timelineEntry.y2025;
 
+    //console.log(timelineEntry);
+
     // Calculate circle size based on maximum lake volume
     let maxLakeVolume = feature.properties.maximum.lakeVolume;
 
@@ -125,10 +129,8 @@ function drawDams() {
 
     let diameter = map(
       maxLakeVolume,
-      minVolume,
-      maxVolume,
-      minDiameter,
-      maxDiameter
+      minVolume, maxVolume,
+      minDiameter,maxDiameter
     );
 
     // Draw dam circle
@@ -210,7 +212,7 @@ function drawDams() {
         if (selectedDam !== feature) {
           selectedDam = feature
           // Show the details container
-          document.getElementById("dam-details-container").style.display = "block"
+          document.getElementById("dam-details-container").style.display = "flex"
         }
       }
     }
@@ -219,7 +221,9 @@ function drawDams() {
 
 // Update the HTML details panel
 function updateDamDetailsHTML(dam) {
-  if (!dam) return;
+  if (!dam){
+    return;
+  } 
 
   // Get the HTML elements using standard DOM methods
   let titleElement = document.getElementById("dam-title");

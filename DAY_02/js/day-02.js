@@ -48,7 +48,7 @@ function setup() {
   createCanvas(500, 500);
   textFont("Arial");
   
-//   noLoop(); //just for logging in draw()
+  noLoop(); //just for logging in draw()
 }
 
 function draw() {
@@ -89,7 +89,7 @@ function drawDams() {
   for (let i = 0; i < izsuData.features.length; i++) {
     
     feature = izsuData.features[i];
-//     console.log(feature.properties);
+    console.log(feature.properties);
     
     maxVolume = Math.max(maxVolume, feature.properties.maximum.lakeVolume);
     minVolume = Math.min(minVolume, feature.properties.maximum.lakeVolume);
@@ -111,10 +111,8 @@ function drawDams() {
 
     let diameter = map(
       maxLakeVolume,
-      minVolume,
-      maxVolume,
-      minDiameter,
-      maxDiameter
+      minVolume, maxVolume,
+      minDiameter, maxDiameter
     );
 
     // Draw dam circle
@@ -144,6 +142,7 @@ function drawDams() {
 }
 
 function drawUI() {
+  push();
   // Draw title and legend
   noStroke();
   fill(0);
