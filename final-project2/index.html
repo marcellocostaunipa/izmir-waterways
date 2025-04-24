@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Water ways</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <div class="container" id="container">
+    <!-- Row 1 -->
+    <div class="slide" data-row="0" data-col="0">Slide 1<br>(Row 1, Col 1)</div>
+    <div class="slide" data-row="0" data-col="1">
+      <li data-link="https://www.youtube.com/watch?v=YYSTC7pFGqs">
+        <div>
+          <figure><img src="https://i.ytimg.com/vi/YYSTC7pFGqs/hqdefault.jpg">
+            <figcaption>Discussion on the drought situation affecting İzmir, including impacts on dams like Tahtalı and
+              water management challenges in 2025.</figcaption>
+          </figure>
+        </div>
+        <h3>Cansu Yüksel ile İzmir'de Neler Oldu? l 10.03.2025</h3>
+      </li>
+      <li data-link="https://www.youtube.com/watch?v=uvWDWG-04po">
+        <div>
+          <figure><img src="https://i.ytimg.com/vi/uvWDWG-04po/hqdefault.jpg">
+            <figcaption>Government announcement on actions regarding illegal dams amid drought conditions, relevant to
+              water resource management in regions including İzmir.</figcaption>
+          </figure>
+        </div>
+        <h3>Government will demolish illegally build dams</h3>
+      </li>
+      <li data-link="https://www.youtube.com/watch?v=Qihvhni8f5k">
+        <div>
+          <figure><img src="https://i.ytimg.com/vi/Qihvhni8f5k/hqdefault.jpg">
+            <figcaption>Report on preparations for anticipated drought in 2025, including water catchment projects to
+              support dam water supplies.</figcaption>
+          </figure>
+        </div>
+        <h3>More TAPS in anticipation of drought in 2025</h3>
+      </li>
+    </div>
+    <div class="slide" data-row="0" data-col="2">Slide 3<br>(Row 1, Col 3)</div>
+
+    <!-- Row 2 -->
+    <div class="slide" data-row="1" data-col="0">
+      <div class="canvas-container" id="sketch-holder">
+
+        <!-- Dam details container - added directly to HTML -->
+        <div id="dam-details-container">
+          <h2 id="dam-title"></h2>
+          <button id="close-button">×</button>
+          <ul id="dam-details-list"></ul>
+          <div id="chart-container"></div>
+        </div>
+      </div>
+    </div>
+    <div class="slide" data-row="1" data-col="1">Slide 5<br>(Row 2, Col 2)</div>
+    <div class="slide" data-row="1" data-col="2">Slide 6<br>(Row 2, Col 3)</div>
+
+    <!-- Row 3 -->
+    <div class="slide" data-row="2" data-col="0">
+      <div class="content">
+        <h1>About This Project</h1>
+        <p>This visualization shows the water resources in Izmir, including dams and their current water levels. The
+          data is based on geographic information and historical records.</p>
+        <p>Click on any dam to see detailed information about its capacity, current water level, and historical data.
+        </p>
+        <p>Created as part of the 2025 Waterways Workshop.</p>
+      </div>
+
+    </div>
+    <div class="slide" data-row="2" data-col="1">Slide 8<br>(Row 3, Col 2)</div>
+    <div class="slide" data-row="2" data-col="2">Slide 9<br>(Row 3, Col 3)</div>
+  </div>
+
+  <div class="nav-indicators" id="colIndicators">
+    <div class="indicator active" data-col="0"></div>
+    <div class="indicator" data-col="1"></div>
+    <div class="indicator" data-col="2"></div>
+  </div>
+
+  <div class="row-indicators" id="rowIndicators">
+    <div class="indicator active" data-row="0"></div>
+    <div class="indicator" data-row="1"></div>
+    <div class="indicator" data-row="2"></div>
+  </div>
+
+  <div class="instructions">
+    <h1>Izmir Water Resources</h1>
+    <p>An interactive visualization of water resources in the Izmir province of Turkey.</p>
+    <p>Scroll down to explore the visualization.</p>
+  </div>
+
+  <div class="slide-info" id="slideInfo">
+    Slide 1 (Row 1, Col 1)
+  </div>
+  <script src="utils/p5.js"></script>
+  <script src="utils/utils.js"></script>
+  <script src="js/script.js"></script>
+  <script src="js/mapview.js"></script>
+
+</body>
+
+</html>
