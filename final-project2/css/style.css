@@ -1,7 +1,19 @@
+/* Variables */
+
+:root {
+  --primary-color: #0000ff;
+  --ligth-primary-color: #7979f0;
+  --secondary-color: #ff8000;
+ 
+}
+
+  /* Reset some default styles */
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-weight: 400;
   }
 
   body {
@@ -25,22 +37,28 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: system-ui, sans-serif;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
     font-size: 2rem;
     scroll-snap-align: start;
     color: white;
   }
 
+  .slide.bg {
+    background: url('../img/waterways-bg.png') no-repeat center center;
+    background-size: cover;
+  }
+
   /* Some simple styles for the slides */
-  .slide:nth-child(1) { background-color: #3498db; }
-  .slide:nth-child(2) { background-color: #2ecc71; }
-  .slide:nth-child(3) { background-color: #e74c3c; }
-  .slide:nth-child(4) { background-color: #9b59b6; }
-  .slide:nth-child(5) { background-color: #f1c40f; }
-  .slide:nth-child(6) { background-color: #1abc9c; }
-  .slide:nth-child(7) { background-color: #e67e22; }
-  .slide:nth-child(8) { background-color: #34495e; }
-  .slide:nth-child(9) { background-color: #d35400; }
+  .slide:nth-child(1) { background-color: var(--primary-color); }
+  .slide:nth-child(2) { background-color:  var(--primary-color); }
+  .slide:nth-child(3) { background-color:  var(--primary-color); }
+  .slide:nth-child(4) { background-color:  var(--primary-color); }
+  .slide:nth-child(5) { background-color:  var(--primary-color); }
+  .slide:nth-child(6) { background-color:  var(--primary-color); }
+  .slide:nth-child(7) { background-color:  var(--primary-color); }
+  .slide:nth-child(8) { background-color:  var(--primary-color); }
+  .slide:nth-child(9) { background-color:  var(--primary-color); }
 
   /* Navigation indicators */
   .nav-indicators {
@@ -65,8 +83,8 @@
   }
 
   .indicator {
-    width: 12px;
-    height: 12px;
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
     background-color: rgba(255, 255, 255, 0.5);
     cursor: pointer;
@@ -122,27 +140,11 @@
     width: 300px;
   }
   
-  h1 {
-    font-size: 24px;
-    margin-bottom: 20px;
-  }
-  
-  p {
-    font-size: 14px;
-    line-height: 1.5;
-    margin-bottom: 15px;
-  }
   
   /* Dam details styling */
   #dam-details-container {
-    background-color: white;
-    border: 1px solid #000;
+    
     padding: 15px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    position: absolute;
-    left: 80px;
-    top: 80px;
-    width: 280px;
     display: none;
     text-align: left;
   }
@@ -150,14 +152,9 @@
   #dam-title {
     margin-top: 0;
     margin-bottom: 15px;
-    font-size: 18px;
+    font-size: 4rem;
   }
-  
-  #dam-details-list {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-  }
+
   
   #dam-details-list li {
     margin-bottom: 8px;
@@ -166,10 +163,9 @@
   
   .fullness-bar-container {
     width: 100%;
-    height: 20px;
-    border: 1px solid #000;
-    margin-top: 15px;
-    position: relative;
+    height: 40px;
+    position: absolute;
+
   }
   
   .fullness-bar-fill {
@@ -184,20 +180,12 @@
     width: 100%;
     text-align: center;
     line-height: 20px;
-    color: #000;
+    color: #fff;
+    bottom: -20px
   }
   
-  #close-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-  }
-  
-  #chart-container {
+ 
+ #chart-container {
     margin-top: 15px;
     height: 100px;
   }
@@ -209,12 +197,33 @@
   }
   
   .chart-canvas {
-    width: 100%;
-    height: 80px;
-    background-color: #f5f5f5;
+   
   }
   
   .chart-canvas canvas {
-    width: 100% !important;
-    height: 80px !important;
+   
+  }
+
+.dam-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    margin-top: 4rem;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .dam-list-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .dam-name {
+    font-size: 2rem;
+    font-weight: bold;
   }

@@ -1,0 +1,67 @@
+/* Slider Container Styles */
+
+    /* Slider Track Styling */
+  .year-slider {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    width: 50%;
+    margin: 4rem 0;
+  }
+
+  .year-slider input[type="range"] {
+    height: 4px;
+    -webkit-appearance: none;
+    appearance: none;
+    outline: none;
+    border: none;
+  }
+  
+  
+  /* Year Labels */
+  .year-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+  }
+  
+  .year-label {
+    font-size: 12px;
+    color: #555;
+    cursor: pointer;
+    padding: 2px 5px;
+    border-radius: 3px;
+    transition: all 0.2s ease;
+  }
+  
+  .year-label:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .year-label.active {
+    font-weight: bold;
+    color: #0066cc;
+    background-color: #e6f0ff;
+  }
+  
+  /* Current Year Display */
+  .current-year {
+    font-size: 18px;
+    font-weight: bold;
+    color: #0066cc;
+    margin: 10px 0 5px 0;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .year-slider-container {
+      width: 90%;
+      padding: 10px;
+    }
+    
+    .year-label {
+      font-size: 10px;
+    }
+  }
+  

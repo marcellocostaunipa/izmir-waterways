@@ -1,0 +1,169 @@
+/* Add these styles to your existing CSS */
+
+/* Center the news list in the viewport */
+.slide[data-row="0"][data-col="1"] {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+  
+  /* Style the news list */
+  .slide[data-row="0"][data-col="1"] ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 90%;
+   /* max-width: 600px;*/
+    text-align: left;
+  }
+  
+  /* Style list items */
+  .slide[data-row="0"][data-col="1"] li {
+    padding: 0.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    border-bottom: 2px solid #fff;
+  }
+  
+  .slide[data-row="0"][data-col="1"] li:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Show only the title initially */
+  .slide[data-row="0"][data-col="1"] li div {
+    display: none;
+    position: relative;
+  }
+  
+  .slide[data-row="0"][data-col="1"] li h3 {
+    margin: 0;
+    font-size: 2.4rem;
+  }
+  
+  /* Video preview card that follows the mouse */
+  .video-preview {
+    position: fixed; /* Changed from absolute to fixed to follow mouse */
+    width: 300px;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 100;
+    transition: opacity 0.2s ease;
+  }
+
+  .video-preview  .video-preview-overlay{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(66, 54, 240, 0.8);
+  }
+  
+  .video-preview img {
+    width: 100%;
+    border-radius: 4px;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    mix-blend-mode: screen;
+    -webkit-filter: grayscale(100%) contrast(100%);
+    filter: grayscale(100%) contrast(100%);
+    opacity: 1;
+  }
+  
+  .video-preview-title {
+    margin-top: 8px;
+    font-size: 0.9rem;
+    font-weight: bold;
+  }
+
+  /* Article preview styles */
+.article-preview {
+  position: fixed;
+  width: 250px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 15px;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 100;
+  transition: opacity 0.2s ease;
+}
+
+.article-preview-title {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.article-preview-excerpt {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: #555;
+}
+  
+  /* Update the YouTube dialog styles to center it in the viewport */
+  .youtube-dialog {
+    padding: 0;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    width: 80vw;
+    max-width: 800px;
+    max-height: 80vh;
+    background: #000;
+  
+    /* Center the dialog in the viewport */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+  }
+  
+  .youtube-dialog::backdrop {
+    background: rgba(0, 0, 0, 0.7);
+  }
+  
+  .youtube-dialog .dialog-content {
+    position: relative;
+    padding-top: 56.25%; /* 16:9 aspect ratio */
+    height: 0;
+    overflow: hidden;
+    width: 100%;
+  }
+  
+  .youtube-dialog iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+  
+  .close-dialog {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 2;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .video-preview {
+      display: none; /* Hide preview on mobile */
+    }
+  
+    .youtube-dialog {
+      width: 95vw;
+    }
+  }
