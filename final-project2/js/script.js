@@ -79,3 +79,85 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   });
+
+
+// Function to handle button alternative
+let altSwitchesDetail = document.getElementsByClassName("alternative-switch-detail");
+let arrAltSwitchesDetail = [...altSwitchesDetail];
+var alternativeSwitchValueDetail = 0;
+
+arrAltSwitchesDetail.forEach((element, index) => {
+  element.addEventListener("click", () => {
+    element.style.opacity = "1";
+    alternativeSwitchValueDetail =index;
+    switchView()
+    console.log("Alternative Switch Value: " + alternativeSwitchValue);
+    arrAltSwitchesDetail.forEach((item, i) => {
+      if (i !== index) {
+        item.style.opacity = ".5";
+      }
+    });    
+    arrAltSwitchesDetail.filter(function (item) {
+        return item !== element;
+      })
+      .forEach((item) => {
+        item.style.opacity = ".5";
+      });
+  });
+});
+
+// Function to handle button alternative
+let altSwitchesGeneral = document.getElementsByClassName("alternative-switch-general");
+let arrAltSwitchesGeneral = [...altSwitchesGeneral];
+var alternativeSwitchValueGeneral = 0;
+
+arrAltSwitchesGeneral.forEach((element, index) => {
+  element.addEventListener("click", () => {
+    element.style.opacity = "1";
+    alternativeSwitchValueGeneral =index;
+    switchView();
+    //console.log("Alternative Switch Value: " + alternativeSwitchValue);
+    arrAltSwitchesGeneral.forEach((item, i) => {
+      if (i !== index) {
+        item.style.opacity = ".5";
+      }
+    });    
+    arrAltSwitchesGeneral.filter(function (item) {
+        return item !== element;
+      })
+      .forEach((item) => {
+        item.style.opacity = ".5";
+      });
+  });
+});
+
+function switchView() {
+  /*switch (alternativeSwitchValueDetail) {
+    case 0:
+      // Show the first alternative view
+      document.getElementById("alternativeView1").style.display = "block";
+      document.getElementById("alternativeView2").style.display = "none";
+      break;
+    case 1:
+      // Show the second alternative view
+      document.getElementById("alternativeView1").style.display = "none";
+      document.getElementById("alternativeView2").style.display = "block";
+      break;
+    default:
+      break;
+  }*/
+  switch (alternativeSwitchValueGeneral) {
+    case 0:
+      // Show the first alternative view
+      document.getElementById("mapviewCanvas").style.display = "block";
+      document.getElementById("gridviewCanvasDiv").style.display = "none";
+      break;
+    case 1:
+      // Show the second alternative view
+      document.getElementById("mapviewCanvas").style.display = "none";
+      document.getElementById("gridviewCanvasDiv").style.display = "block";
+      break;
+    default:
+      break;
+  }
+}

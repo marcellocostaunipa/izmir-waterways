@@ -107,10 +107,12 @@
     <div class="slide" data-row="0" data-col="2">Slide 3<br>(Row 1, Col 3)</div>
 
     <!-- Overview -->
-    <div class="slide position-relative" data-row="1" data-col="0">
+    <div class="slide position-relative" data-row="1" data-col="0" id="overview-slide">
 
       <div class="canvas-container d-none df-md-block" id="sketch-holder">
         <!-- Dam details container - added directly to HTML -->
+         <canvas id="mapviewCanvas" class="canvas"></canvas>
+         <div id="gridviewCanvasDiv" class="position-relative"><canvas id="gridviewCanvas" class="canvas"></canvas></div>
       </div>
       <div id="year-slider" class="year-slider"></div>
 
@@ -123,13 +125,22 @@
           </div>
         </div>
       </div>
+      <div id="overview-alternative-switch">
+        <input type="radio" name="overview-chart-alternative" id="overview-chart-alternative-1" value="1" class="alternative-switch-general" checked>
+        <input type="radio" name="overview-chart-alternative" id="overview-chart-alternative-2" value="2" class="alternative-switch-general" >
+      </div>
     </div>
 
-    <div class="slide" data-row="1" data-col="1">
+    <div class="slide" data-row="1" data-col="1" id="chart-alternative-switch-slide">
       <div id="dam-details-container">
         <h2 id="dam-title"></h2>
         <ul id="dam-details-list"></ul>
         <div id="chart-container"></div>
+      </div>
+      <div id="chart-alternative-switch">
+        <input type="radio" name="chart-alternative" id="chart-alternative-1" value="1" class="alternative-switch-detail" checked>
+        <input type="radio" name="chart-alternative" id="chart-alternative-2" value="2" class="alternative-switch-detail" >
+        <input type="radio" name="chart-alternative" id="chart-alternative-3" value="3" class="alternative-switch-detail" >
       </div>
     </div>
 
@@ -177,12 +188,15 @@
   <div class="slide-info" id="slideInfo">
     Slide 1 (Row 1, Col 1)
   </div>
-  <script src="utils/p5.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.11.5/lib/p5.min.js"></script>
+  <script src="js/preload.js"></script>
   <script src="utils/utils.js"></script>
   <script src="js/script.js"></script>
   <script src="js/mapview.js"></script>
+  <script src="js/gridview.js"></script>
   <script src="js/news-list.js"></script>
-
+  <script src="js/general-p5.js"></script>
 
 </body>
 

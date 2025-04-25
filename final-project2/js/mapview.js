@@ -9,10 +9,8 @@ const bounds = {
   maxLat: 39.46,
 }
 
-let izsuData
-let izmir
 
-let features
+//let features
 let maxVolume = 0
 let minVolume = 0
 
@@ -26,7 +24,7 @@ let previousSelectedDam = null
 let isSelectedDam = true
 
 // Add these variables at the beginning of your file
-let yearSlider
+
 const transitionRate = 0.1
 let year = 2025
 const availableYears = [2021, 2022, 2023, 2024, 2025]
@@ -39,14 +37,12 @@ const HIGH_FULLNESS_COLOR = [0, 0, 255] // Blue for high levels (60-100%)
 // Add this variable at the top of the file with the other variables
 let previousYear = 2025
 
-function preload() {
-  izsuData = loadJSON("data/izsu.json")
-  izmir = loadJSON("data/izmir.json")
-}
 
 // Add this to your setup function
-function setup() {
-  createCanvas(500, 500)
+var mapview = function (mapview) {
+  mapview.setup =function() {
+  let mapviewCanvas = document.getElementById("mapviewCanvas");
+  mapview.createCanvas(500, 500,P2D,mapviewCanvas)
 
   // Create canvas inside the sketch-holder div
   const sketchHolder = document.getElementById("sketch-holder")
@@ -55,11 +51,11 @@ function setup() {
     canvasWidth = sketchHolder.offsetWidth > 800 ? 800 : sketchHolder.offsetWidth - 40
     canvasHeight = canvasWidth
 
-    canvas = createCanvas(canvasWidth, canvasHeight)
+    canvas = mapview.createCanvas(canvasWidth, canvasHeight)
     canvas.parent("sketch-holder") // This line attaches the canvas to the div
   } else {
     // Fallback if the sketch-holder div is not found
-    canvas = createCanvas(canvasWidth, canvasHeight)
+    canvas = mapview.createCanvas(canvasWidth, canvasHeight)
   }
 
   const closeButton = document.getElementById("close-button")
@@ -74,36 +70,6 @@ function setup() {
       document.getElementById("dam-details-container").style.display = "none"
     })
     console.log("Close button event listener attached")
-  }
-
-  // Add the year slider
-  yearSlider = createSlider(2021, 2025, 2025, 1)
-  yearSlider.style("width", "100%")
-  yearSlider.parent("year-slider")
-
-  // Create year labels and add them to the year-slider container
-  const yearSliderContainer = document.getElementById("year-slider")
-  if (yearSliderContainer) {
-    // Create a container for the year labels
-    const labelsContainer = document.createElement("div")
-    labelsContainer.className = "year-labels"
-    labelsContainer.style.display = "flex"
-    labelsContainer.style.justifyContent = "space-between"
-    labelsContainer.style.width = "100%"
-    labelsContainer.style.marginTop = "5px"
-
-    // Add labels for each year
-    for (const yr of availableYears) {
-      const label = document.createElement("span")
-      label.textContent = yr
-      label.style.fontSize = "12px"
-      label.style.fontWeight = yr === 2025 ? "bold" : "normal"
-      label.style.color = yr === 2025 ? "#0064ff" : "#666"
-      labelsContainer.appendChild(label)
-    }
-
-    // Add the labels container after the slider
-    yearSliderContainer.appendChild(labelsContainer)
   }
 
   // Draw year labels below the slider position
@@ -204,8 +170,8 @@ function getFullnessColor(fullnessRate) {
 }
 
 // Update your draw function to get the year from the slider
-function draw() {
-  background(240)
+mapview.draw = function() {
+  mapview.background(240)
   drawIzmirBoundary()
   hoveredDam = null
 
@@ -234,7 +200,7 @@ function draw() {
     })
   }
 
-  background(0, 0, 255)
+  mapview.background(0, 0, 255)
 
   // Draw the Izmir province boundary
   drawIzmirBoundary()
@@ -250,15 +216,17 @@ function draw() {
     updateDamDetailsHTML(selectedDam)
     previousSelectedDam = selectedDam
   }
+
+  drawCoordinates();
 }
 
 function drawIzmirBoundary() {
-  fill("#7979f0")
-  stroke(100)
-  strokeWeight(1)
+  mapview.fill("#7979f0")
+  mapview.stroke(100)
+  mapview.strokeWeight(1)
 
   // Simplified boundary for demonstration
-  beginShape()
+  mapview.beginShape()
 
   // To iterate through izmir.json
   const boundaryPoints = izmir.boundaryPoints
@@ -266,10 +234,10 @@ function drawIzmirBoundary() {
   for (let i = 0; i < boundaryPoints.length; i++) {
     const point = boundaryPoints[i]
     const pixelCoord = geoToPixel(point[0], point[1])
-    vertex(pixelCoord.x, pixelCoord.y)
+    mapview.vertex(pixelCoord.x, pixelCoord.y)
   }
 
-  endShape(CLOSE)
+  mapview.endShape(CLOSE)
 }
 
 function drawDams() {
@@ -298,10 +266,10 @@ function drawDams() {
     const diameter = map(maxLakeVolume, minVolume, maxVolume, minDiameter, maxDiameter)
 
     // Draw dam circle (outer ring representing capacity)
-    stroke(0, 100, 200)
-    strokeWeight(2)
-    fill(255)
-    ellipse(pixelCoord.x, pixelCoord.y, diameter)
+    mapview.stroke(0, 100, 200)
+    mapview.strokeWeight(2)
+    mapview.fill(255)
+    mapview.ellipse(pixelCoord.x, pixelCoord.y, diameter)
 
     // Draw water level as fill percentage if data is available
     const fullness = currentYearData.activeFullnessRate
@@ -318,16 +286,16 @@ function drawDams() {
 
     // Then use smoothFullness instead of activeFullnessRate for the fillDiameter calculation
     const fillDiameter = map(smoothFullness, 0, 100, 0, diameter)
-    noStroke()
-    fill(fillColor[0], fillColor[1], fillColor[2], fillColor[3])
-    ellipse(pixelCoord.x, pixelCoord.y, fillDiameter)
+    mapview.noStroke()
+    mapview.fill(fillColor[0], fillColor[1], fillColor[2], fillColor[3])
+    mapview.ellipse(pixelCoord.x, pixelCoord.y, fillDiameter)
 
     // Check if this is the selected dam and draw the red outline if it is
     if (selectedDam === feature) {
-      noFill()
-      stroke(255, 100, 0)
-      strokeWeight(3) // Make it slightly thicker for the selected dam
-      ellipse(pixelCoord.x, pixelCoord.y, diameter + 8) // Make it slightly larger for emphasis
+      mapview.noFill()
+      mapview.stroke(255, 100, 0)
+      mapview.strokeWeight(3) // Make it slightly thicker for the selected dam
+      mapview.ellipse(pixelCoord.x, pixelCoord.y, diameter + 8) // Make it slightly larger for emphasis
       if (isSelectedDam) {
         /*HARD CODED!*/
         const slides = document.querySelectorAll(".slide")
@@ -337,60 +305,60 @@ function drawDams() {
     }
 
     // Check if mouse is over this dam
-    if (dist(mouseX, mouseY, pixelCoord.x, pixelCoord.y) < diameter / 2) {
+    if (dist(mapview.mouseX, mapview.mouseY, pixelCoord.x, pixelCoord.y) < diameter / 2) {
       // Highlight on hover (only if not already selected)
       if (selectedDam !== feature) {
-        noFill()
-        stroke(255, 100, 0)
-        strokeWeight(2)
-        ellipse(pixelCoord.x, pixelCoord.y, diameter + 5)
+        mapview.noFill()
+        mapview.stroke(255, 100, 0)
+        mapview.strokeWeight(2)
+        mapview.ellipse(pixelCoord.x, pixelCoord.y, diameter + 5)
       }
 
       // Show tooltip with volume information
-      fill(255)
-      noStroke()
-      strokeWeight(1)
+      mapview.fill(255)
+      mapview.noStroke()
+      mapview.strokeWeight(1)
 
       // Position tooltip to avoid going off-screen
-      let tooltipX = mouseX + 10
-      const tooltipY = mouseY
+      let tooltipX = mapview.mouseX + 10
+      const tooltipY = mapview.mouseY
       const tooltipWidth = 260
       const tooltipHeight = 100
 
       // Adjust if too close to right edge
-      if (tooltipX + tooltipWidth > width) {
-        tooltipX = mouseX - tooltipWidth - 10
+      if (tooltipX + tooltipWidth > mapview.width) {
+        tooltipX = mapview.mouseX - tooltipWidth - 10
       }
 
-      rect(tooltipX, tooltipY, tooltipWidth, tooltipHeight)
+      mapview.rect(tooltipX, tooltipY, tooltipWidth, tooltipHeight)
 
-      fill(0)
-      noStroke()
-      textAlign(LEFT)
-      textSize(16)
-      textStyle(BOLD)
-      text(feature.properties.name, tooltipX + 5, tooltipY + 15)
-      textStyle(NORMAL)
-      text("Max Volume: " + formatVolume(maxLakeVolume), tooltipX + 5, tooltipY + 35)
+      mapview.fill(0)
+      mapview.noStroke()
+      mapview.textAlign(LEFT)
+      mapview.textSize(16)
+      mapview.textStyle(BOLD)
+      mapview.text(feature.properties.name, tooltipX + 5, tooltipY + 15)
+      mapview.textStyle(NORMAL)
+      mapview.text("Max Volume: " + formatVolume(maxLakeVolume), tooltipX + 5, tooltipY + 35)
 
       if (currentYearData) {
-        text("Current Volume: " + formatVolume(currentYearData.totalWaterVolume), tooltipX + 5, tooltipY + 55)
+        mapview.text("Current Volume: " + formatVolume(currentYearData.totalWaterVolume), tooltipX + 5, tooltipY + 55)
 
         // Add color indicator for fullness level
         const fullnessText = "Fullness: " + currentYearData.activeFullnessRate.toFixed(1) + "%"
         const fullnessColor = getFullnessColor(currentYearData.activeFullnessRate)
 
         // Draw the text
-        text(fullnessText, tooltipX + 5, tooltipY + 75)
+        mapview.text(fullnessText, tooltipX + 5, tooltipY + 75)
 
         // Draw a small colored circle next to the fullness text to indicate the status
-        noStroke()
-        fill(fullnessColor[0], fullnessColor[1], fullnessColor[2], fullnessColor[3])
-        ellipse(tooltipX + textWidth(fullnessText) + 15, tooltipY + 72, 10, 10)
+        mapview.noStroke()
+        //mapview.fill(fullnessColor[0], fullnessColor[1], fullnessColor[2], fullnessColor[3])
+      //  mapview.ellipse(tooltipX + textWidth(fullnessText) + 15, tooltipY + 72, 10, 10)
       }
 
       // Set as selected dam if clicked
-      if (mouseIsPressed) {
+      if (mapview.mouseIsPressed) {
         // Only update if a different dam is selected
         isSelectedDam = true
         if (selectedDam !== feature) {
@@ -596,7 +564,7 @@ function updateDamDetailsHTML(dam) {
   }
 }
 
-function drawUI() {
+/*function drawUI() {
   // Legend
   push()
   textSize(12)
@@ -634,4 +602,39 @@ function drawUI() {
   textSize(8)
   text("2025 - Water Ways Workshop", width - 120, height - 10)
   pop()
+}
+*/
+
+function geoToPixel(lon, lat) {
+  // Convert geographic coordinates to pixel coordinates
+  let padding = 40;
+  
+  // Map longitude to x-coordinate with padding
+  let x = map(
+    lon,
+    bounds.minLon, bounds.maxLon,
+    padding, mapview.width - padding
+  );
+  
+  // Map latitude to y-coordinate with padding
+  // Note: We invert the target range to flip the y-axis
+  let y = map(
+    lat,
+    bounds.minLat, bounds.maxLat,
+    mapview.height - padding, padding
+  );
+  
+  return { x, y };
+}
+
+function drawCoordinates() {
+  //console.log("Drawing coordinates")
+  const lon = map(mapview.mouseX, 0, mapview.width, bounds.minLon, bounds.maxLon)
+  const lat = map(mapview.mouseY, mapview.height, 0, bounds.minLat, bounds.maxLat)
+  mapview.noStroke();
+  mapview.fill(255)
+  mapview.textSize(12)
+  mapview.textAlign(RIGHT)
+  mapview.text("Lon: " + lon.toFixed(4) + ", Lat: " + lat.toFixed(4), mouseX, mouseY)
+}
 }

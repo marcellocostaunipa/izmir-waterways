@@ -2,27 +2,7 @@
 UTILITY FUNCTIONS
 **************/
 
-function geoToPixel(lon, lat) {
-  // Convert geographic coordinates to pixel coordinates
-  let padding = 40;
-  
-  // Map longitude to x-coordinate with padding
-  let x = map(
-    lon,
-    bounds.minLon, bounds.maxLon,
-    padding, width - padding
-  );
-  
-  // Map latitude to y-coordinate with padding
-  // Note: We invert the target range to flip the y-axis
-  let y = map(
-    lat,
-    bounds.minLat, bounds.maxLat,
-    height - padding, padding
-  );
-  
-  return { x, y };
-}
+
 
 // Original function for drawing on the main map
 function drawMultiPolygon(multiPolygon, bounds, width, height, padding = 20) {
