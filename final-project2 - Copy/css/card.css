@@ -6,7 +6,7 @@
 
 .card-title {
     font-size: 3rem;
-    max-width: 80%;
+    max-width: 64ch;
     text-wrap: balance;
 }
 

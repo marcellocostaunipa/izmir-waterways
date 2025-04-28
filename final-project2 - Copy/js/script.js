@@ -91,7 +91,7 @@ arrAltSwitchesDetail.forEach((element, index) => {
     element.style.opacity = "1";
     alternativeSwitchValueDetail =index;
     switchView()
-    //console.log("Alternative Switch Value: " + alternativeSwitchValue);
+    console.log("Alternative Switch Value: " + alternativeSwitchValue);
     arrAltSwitchesDetail.forEach((item, i) => {
       if (i !== index) {
         item.style.opacity = ".5";
@@ -132,20 +132,20 @@ arrAltSwitchesGeneral.forEach((element, index) => {
 });
 
 function switchView() {
-  switch (alternativeSwitchValueDetail) {
+  /*switch (alternativeSwitchValueDetail) {
     case 0:
       // Show the first alternative view
-      document.getElementById("detailViewOne").style.display = "block";
-      document.getElementById("detailViewCanvas").style.display = "none";
+      document.getElementById("alternativeView1").style.display = "block";
+      document.getElementById("alternativeView2").style.display = "none";
       break;
     case 1:
       // Show the second alternative view
-      document.getElementById("detailViewOne").style.display = "none";
-      document.getElementById("detailViewCanvas").style.display = "block";
+      document.getElementById("alternativeView1").style.display = "none";
+      document.getElementById("alternativeView2").style.display = "block";
       break;
     default:
       break;
-  }
+  }*/
   switch (alternativeSwitchValueGeneral) {
     case 0:
       // Show the first alternative view

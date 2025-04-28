@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&display=swap');
+@import url('https://fonts.cdnfonts.com/css/satoshi');
+
+* {
+    font-family: "Geist Mono", monospace;
+    font-weight: 400;
+}
+
+strong {
+    font-weight: 700;
+}
+
+h1, h2, h3 {
+    font-family: "Satoshi", sans-serif;
+    line-height: 1.1;
+}
+
+h1 strong, h2 strong, h3  strong {
+    font-family: "Satoshi", sans-serif;
+    font-weight: 700;
+}

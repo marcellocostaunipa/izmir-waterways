@@ -1,0 +1,329 @@
+{
+	"type": "FeatureCollection",
+	"features": [
+		{
+	    	"type": "Feature",
+	    	"geometry": {
+	      		"type": "Point",
+	      		"coordinates": [27.12311176138791, 38.156823388843115]
+	    	},
+	    	"properties": {
+	      		"name": "Tahtalı Dam",
+                "area": 24.5,
+	      		"timeline": [
+	        		{
+				      "y2021": {
+				        "lakeWaterElevation": 57.96,
+				        "totalWaterVolume": 236350000,
+				        "usableWaterVolume": 216750000,
+				        "activeFullnessRate": 75.51
+				      },
+				      "y2022": {
+				        "lakeWaterElevation": 57.22,
+				        "totalWaterVolume": 215075000,
+				        "usableWaterVolume": 195475000,
+				        "activeFullnessRate": 68.10
+				      },
+				      "y2023": {
+				        "lakeWaterElevation": 52.09,
+				        "totalWaterVolume": 138619000,
+				        "usableWaterVolume": 119019000,
+				        "activeFullnessRate": 41.46
+				      },
+				      "y2024": {
+				        "lakeWaterElevation": 49.28,
+				        "totalWaterVolume": 108874000,
+				        "usableWaterVolume": 89274000,
+				        "activeFullnessRate": 31.10
+				      },
+				      "y2025": {
+				        "lakeWaterElevation": 44.25,
+				        "totalWaterVolume": 64750000,
+				        "usableWaterVolume": 45150000,
+				        "activeFullnessRate": 15.73
+				      }
+				    }
+	      		],
+	      		"minimum": {
+			      	"lakeWaterElevation": 31.00,
+			      	"lakeVolume": 19600000
+			    },
+			    "maximum": {
+			      	"lakeWaterElevation": 60.50,
+			      	"lakeVolume": 306650000
+			    },
+			    "usableLakeWaterVolume": 287050000
+			}
+	  	},
+	  	{
+	        "type": "Feature",
+	        "geometry": {
+	          "type": "Point",
+	          "coordinates": [27.04128531695483, 38.370949426545096]
+	        },
+	        "properties": {
+	          "name": "Balçova Dam",
+              "area": 8.3,
+	          "timeline": [
+	          	{
+			      "y2021": {
+			        "lakeWaterElevation": 144.38,
+			        "totalWaterVolume": 7178000,
+			        "usableWaterVolume": 7041000,
+			        "activeFullnessRate": 92.38
+			      },
+			      "y2022": {
+			        "lakeWaterElevation": 141.18,
+			        "totalWaterVolume": 6111000,
+			        "usableWaterVolume": 5974000,
+			        "activeFullnessRate": 78.38
+			      },
+			      "y2023": {
+			        "lakeWaterElevation": 133.94,
+			        "totalWaterVolume": 4108000,
+			        "usableWaterVolume": 3971000,
+			        "activeFullnessRate": 52.10
+			      },
+			      "y2024": {
+			        "lakeWaterElevation": 140.78,
+			        "totalWaterVolume": 5986000,
+			        "usableWaterVolume": 5849000,
+			        "activeFullnessRate": 76.74
+			      },
+			      "y2025": {
+			        "lakeWaterElevation": 130.06,
+			        "totalWaterVolume": 3242000,
+			        "usableWaterVolume": 3105000,
+			        "activeFullnessRate": 40.74
+			      }
+			    }
+	          ],
+	          "minimum": {
+			      "lakeWaterElevation": 101.00,
+			      "lakeVolume": 137000
+			    },
+			    "maximum": {
+			      "lakeWaterElevation": 146.00,
+			      "lakeVolume": 7759000
+			    },
+			    "usableLakeWaterVolume": 7622000
+			}
+		},
+		{
+	        "type": "Feature",
+	        "geometry": {
+	          "type": "Point",
+	          "coordinates": [26.958143, 38.097694]
+	        },
+	        "properties": {
+	          	"name": "Ürkmez Dam",
+                "area": 6.7,
+	          	"timeline": [
+					{
+				      "y2021": {
+				        "lakeWaterElevation": 45.50,
+				        "totalWaterVolume": 7887000,
+				        "usableWaterVolume": 7512000,
+				        "activeFullnessRate": 91.05
+				      },
+				      "y2022": {
+				        "lakeWaterElevation": 45.51,
+				        "totalWaterVolume": 7894000,
+				        "usableWaterVolume": 7519000,
+				        "activeFullnessRate": 91.14
+				      },
+				      "y2023": {
+				        "lakeWaterElevation": 38.63,
+				        "totalWaterVolume": 4318000,
+				        "usableWaterVolume": 3943000,
+				        "activeFullnessRate": 47.79
+				      },
+				      "y2024": {
+				        "lakeWaterElevation": 37.80,
+				        "totalWaterVolume": 3970000,
+				        "usableWaterVolume": 3595000,
+				        "activeFullnessRate": 43.58
+				      },
+				      "y2025": {
+				        "lakeWaterElevation": 34.15,
+				        "totalWaterVolume": 2649000,
+				        "usableWaterVolume": 2274000,
+				        "activeFullnessRate": 27.56
+				      }
+				    }
+	          ],
+	          	"minimum": {
+			      	"lakeWaterElevation": 23.00,
+			      	"lakeVolume": 375
+			   	},
+			    "maximum": {
+			      	"lakeWaterElevation": 46.63,
+			      	"lakeVolume": 8625000
+			    },
+			    "usableLakeWaterVolume": 8250000
+			}
+	  	},
+	  	{
+	    "type": "Feature",
+	    "geometry": {
+	      "type": "Point",
+	      "coordinates": [26.413701, 38.289210]
+	    },
+	    "properties": {
+	      	"name": "Alaçatı Dam",
+            "area": 2.55,
+	      	"timeline": [
+	          	{
+			      "y2021": {
+			        "lakeWaterElevation": 18.11,
+			        "totalWaterVolume": 12264000,
+			        "usableWaterVolume": 11764000,
+			        "activeFullnessRate": 73.53
+			      },
+			      "y2022": {
+			        "lakeWaterElevation": 19.24,
+			        "totalWaterVolume": 15024000,
+			        "usableWaterVolume": 14524000,
+			        "activeFullnessRate": 90.78
+			      },
+			      "y2023": {
+			        "lakeWaterElevation": 17.05,
+			        "totalWaterVolume": 9580000,
+			        "usableWaterVolume": 9080000,
+			        "activeFullnessRate": 56.75
+			      },
+			      "y2024": {
+			        "lakeWaterElevation": 15.76,
+			        "totalWaterVolume": 7360000,
+			        "usableWaterVolume": 6860000,
+			        "activeFullnessRate": 42.88
+			      },
+			      "y2025": {
+			        "lakeWaterElevation": 13.61,
+			        "totalWaterVolume": 3326000,
+			        "usableWaterVolume": 2826000,
+			        "activeFullnessRate": 17.66
+			      }
+				}
+	      	],
+	         "minimum": {
+	  			"lakeWaterElevation": 11.20,
+	  			"lakeVolume": 500
+	    	},
+		    "maximum": {
+		      	"lakeWaterElevation": 19.80,
+		      	"lakeVolume": 16500000
+		    },
+		    "usableLakeWaterVolume": 16000000
+	    }
+	  },
+	  	{
+	        "type": "Feature",
+	        "geometry": {
+	            "type": "Point",
+	            "coordinates": [27.126900, 38.806414] 
+	        },
+	        "properties": {
+	            "name": "Güzelhisar Dam",
+                "area": null,
+	            "timeline": [
+	            	{
+				      "y2021": {
+				        "lakeWaterElevation": 103.06,
+				        "totalWaterVolume": 133798000,
+				        "usableWaterVolume": 121838000,
+				        "activeFullnessRate": 84.97
+				      },
+				      "y2022": {
+				        "lakeWaterElevation": 103.31,
+				        "totalWaterVolume": 135008000,
+				        "usableWaterVolume": 123048000,
+				        "activeFullnessRate": 85.81
+				      },
+				      "y2023": {
+				        "lakeWaterElevation": 100.23,
+				        "totalWaterVolume": 119369000,
+				        "usableWaterVolume": 107409000,
+				        "activeFullnessRate": 74.91
+				      },
+				      "y2024": {
+				        "lakeWaterElevation": 103.73,
+				        "totalWaterVolume": 137235000,
+				        "usableWaterVolume": 125275000,
+				        "activeFullnessRate": 87.37
+				      },
+				      "y2025": {
+				        "lakeWaterElevation": 97.85,
+				        "totalWaterVolume": 108100000,
+				        "usableWaterVolume": 96140000,
+				        "activeFullnessRate": 67.05
+				      }
+				    }
+	            ],
+	            "minimum": {
+				      "lakeWaterElevation": 63.00,
+				      "lakeVolume": 11960000
+		    	},
+			    "maximum": {
+			      	"lakeWaterElevation": 107.00,
+			      	"lakeVolume": 155350000
+			    },
+		    	"usableLakeWaterVolume": 143390000
+			}
+		},
+		{
+	        "type": "Feature",
+	        "geometry": {
+	            "type": "Point",
+	            "coordinates": [28.123676262553154, 38.99392102998841] 
+	        },
+	        "properties": {
+	            "name": "Gördes Dam",
+                "area": 14.0,
+	            "timeline": [
+					{
+				      "y2021": {
+				        "lakeWaterElevation": 217.57,
+				        "totalWaterVolume": 55995000,
+				        "usableWaterVolume": 37395000,
+				        "activeFullnessRate": 8.85
+				      },
+				      "y2022": {
+				        "lakeWaterElevation": 213.25,
+				        "totalWaterVolume": 40275000,
+				        "usableWaterVolume": 21675000,
+				        "activeFullnessRate": 4.99
+				      },
+				      "y2023": {
+				        "lakeWaterElevation": 216.91,
+				        "totalWaterVolume": 53640000,
+				        "usableWaterVolume": 35040000,
+				        "activeFullnessRate": 8.06
+				      },
+				      "y2024": {
+				        "lakeWaterElevation": 222.21,
+				        "totalWaterVolume": 75108000,
+				        "usableWaterVolume": 56508000,
+				        "activeFullnessRate": 13.00
+				      },
+				      "y2025": {
+				        "lakeWaterElevation": 213.95,
+				        "totalWaterVolume": 42725000,
+				        "usableWaterVolume": 24125000,
+				        "activeFullnessRate": 5.55
+				      }
+			    	}
+	            ],
+	            "minimum": {
+				      "lakeWaterElevation": 205.50,
+				      "lakeVolume": 18600000
+				},
+			    "maximum": {
+			      	"lakeWaterElevation": 268.20,
+			      	"lakeVolume": 453380000
+			    },
+			    "usableLakeWaterVolume": 434780000
+			}
+		}
+	]
+ }

@@ -45,8 +45,7 @@ Promise.all([firstJsonPromise, secondJsonPromise])
     
     var mapviewCanvas= new p5(mapview, 'p5sketch');
     var gridviewCanvas= new p5(gridview, 'p5sketch');
-    var detailViewCanvas= new p5(detailview, 'p5sketch');
-    
+
     switchView();
   })
   .catch(error => {

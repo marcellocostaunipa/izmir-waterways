@@ -267,9 +267,3 @@ position: relative;
   #about-container img{
     height:750px
   }
-
-  strong{
-    /* highlight with wavy underline*/
-    text-decoration: underline wavy #fff;
-    text-decoration-thickness: 2px;
-  }
